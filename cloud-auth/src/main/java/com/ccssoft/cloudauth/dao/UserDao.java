@@ -1,5 +1,6 @@
 package com.ccssoft.cloudauth.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ccssoft.cloudauth.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,13 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2020/5/19 18:05
  */
 @Mapper
-public interface UserDao {
-    User getUserById (int id);
+public interface UserDao extends BaseMapper<User> {
 
-    User getUserByUsername(String username);
-
-    int saveUserToDB(User user);
-
-    String getSaltByUsername(String username);
 }
 

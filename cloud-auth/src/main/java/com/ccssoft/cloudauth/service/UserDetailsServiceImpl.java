@@ -1,5 +1,6 @@
 package com.ccssoft.cloudauth.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudauth.dao.RoleDao;
 import com.ccssoft.cloudauth.dao.UserDao;
 import com.ccssoft.cloudauth.entity.JwtUser;
@@ -22,7 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private RoleDao roleDao;
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userDao.getUserByUsername(s);
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username",s);
+        User user = userDao.selectOne(wrapper);
+        //当被逻辑删除、禁用的用户，不用进行后续验证，直接退
+        if (user == null) {
+            throw new UsernameNotFoundException("该用户不存在！");
+        }
         return new JwtUser(user,roleDao);
     }
 

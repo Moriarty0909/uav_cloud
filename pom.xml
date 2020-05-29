@@ -25,6 +25,7 @@
         <module>cloud-gateway</module>
         <module>cloud-messagemachine</module>
         <module>cloud-auth</module>
+        <module>cloud-uav</module>
     </modules>
 
 </project>

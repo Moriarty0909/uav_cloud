@@ -1,8 +1,9 @@
 server:
-  port: 8001
+  port: 11001
+
 spring:
   application:
-    name: admin-server
+    name: uav-server
   datasource:
     url: jdbc:mysql://183.56.219.211:33066/uav_cloud?useUnicode=true&characterEncoding=utf8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -21,7 +22,7 @@ spring:
 
 
 mybatis-plus:
-  type-aliases-package: com.ccssoft.cloudadmin.entity
+  type-aliases-package: com.ccssoft.clouduav.entity
   mapper-locations: classpath:mybatis-mappers/*.xml
   global-config:
     db-config:

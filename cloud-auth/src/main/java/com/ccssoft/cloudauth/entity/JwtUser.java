@@ -13,7 +13,7 @@ import java.util.Collections;
  * @date 2020/5/19 15:30
  */
 public class JwtUser implements UserDetails {
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;

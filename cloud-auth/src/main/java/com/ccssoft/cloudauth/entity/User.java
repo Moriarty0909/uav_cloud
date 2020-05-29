@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class User extends BaseEntity {
-    private static final long serialVersionUID = 4010728069921493163L;
+    private static final long serialVersionUID = 1703785837883502040L;
 
     private String username;
 
