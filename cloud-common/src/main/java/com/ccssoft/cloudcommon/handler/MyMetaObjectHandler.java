@@ -1,4 +1,4 @@
-package com.ccssoft.cloudadmin.handler;
+package com.ccssoft.cloudcommon.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("start insert");
-        this.setFieldValByName("gmtGreate",new Date(),metaObject);
+        this.setFieldValByName("gmtCreate",new Date(),metaObject);
         this.setFieldValByName("gmtModified",new Date(),metaObject);
     }
     /**

@@ -8,6 +8,7 @@ import com.ccssoft.clouduav.dao.UavDao;
 import com.ccssoft.clouduav.entity.UserUav;
 import com.ccssoft.clouduav.service.UavService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -59,6 +60,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
         QueryWrapper<UserUav> wrapperRelation = new QueryWrapper();
         wrapperRelation.eq("user_id",id);
         List<UserUav> userUavs = userUavDao.selectList(wrapperRelation);
+        if (userUavs == null) {
+            return null;
+        }
         Collection<Long> collection = new ArrayList<>();
         for (UserUav userUav : userUavs) {
             collection.add(userUav.getUavId());
@@ -75,7 +79,7 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
 
     @Override
     public Uav getUavById(Long uavId) {
-        QueryWrapper wrapper = new QueryWrapper();
+        QueryWrapper<Uav> wrapper = new QueryWrapper();
         wrapper.eq("id",uavId);
         return uavDao.selectOne(wrapper);
     }

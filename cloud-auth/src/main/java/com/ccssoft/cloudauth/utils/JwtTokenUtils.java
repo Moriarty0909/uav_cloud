@@ -7,8 +7,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
 import java.util.HashMap;
 
+
 /**
- * Created by echisan on 2018/6/23
+ * @author lizhengyu
  */
 public class JwtTokenUtils {
 

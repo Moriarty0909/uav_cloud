@@ -18,6 +18,7 @@ import java.util.Date;
 @Data
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = -6507594581709611025L;
+
     @TableId(type = IdType.AUTO)
     public Long id;
 

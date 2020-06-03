@@ -51,9 +51,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         // 从输入流中获取到登录的信息
         try {
-
             LoginUser loginUser = new ObjectMapper().readValue(request.getInputStream(), LoginUser.class);
             rememberMe.set(loginUser.getRememberMe() == null ? 0 : loginUser.getRememberMe());
+
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword(), new ArrayList<>())
             );
@@ -70,7 +70,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-
         JwtUser jwtUser = (JwtUser) authResult.getPrincipal();
         boolean isRemember = rememberMe.get() == 1;
 

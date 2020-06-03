@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccssoft.cloudairspace.dao.AirspaceDao">
+    <insert id="saveDB" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO airspace  ( airspace_name, status,airspace_point, start_time, end_time, gmt_create, gmt_modified )  VALUES
+        ( #{airspaceName}, #{status}, ST_GeomFromText(#{airspacePoint}), #{startTime}, #{endTime}, #{gmtCreate} ,#{gmtModified})
+    </insert>
+    <update id="updateStatusById">
+        UPDATE airspace
+        SET status=1
+        WHERE
+        id=#{id};
+    </update>
+    <select id="getAirspaceListByIdList" resultType="com.ccssoft.cloudairspace.entity.Airspace" parameterType="java.util.List" >
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
+        id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+
+    </select>
+    <select id="getAirspaceByAirspaceId" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
+        id =#{airspaceId}
+    </select>
+    <select id="getAirspaceListByIdListAndTime" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
+        where status = 1 and(#{date} between start_time and end_time) and
+        id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+        </foreach>
+    </select>
+    <select id="getAirspaceNotAllow" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
+        where status = 0
+    </select>
+</mapper>

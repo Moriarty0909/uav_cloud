@@ -52,5 +52,10 @@ public class Uav extends BaseEntity {
     @TableLogic
     private Integer deleted;
 
+    /**
+     * 附加数据
+     */
+    private transient Long userId;
+
 
 }

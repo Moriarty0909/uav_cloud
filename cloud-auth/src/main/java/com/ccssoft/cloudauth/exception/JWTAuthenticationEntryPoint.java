@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by echisan on 2018/6/24
- *
+ * @author lizhengyu
  * @description:没有携带token或者token无效
  */
 public class JWTAuthenticationEntryPoint implements AuthenticationEntryPoint {

@@ -2,8 +2,7 @@ package com.ccssoft.cloudauth.exception;
 
 /**
  * @description: 自定义异常
- * @author: maxiao1
- * @date: 2019/9/13 17:21
+ * @author: moriarty
  */
 public class TokenIsExpiredException extends Exception {
 

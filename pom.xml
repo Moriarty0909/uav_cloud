@@ -26,6 +26,8 @@
         <module>cloud-messagemachine</module>
         <module>cloud-auth</module>
         <module>cloud-uav</module>
+        <module>cloud-airspace</module>
+        <module>cloud-task</module>
     </modules>
 
 </project>

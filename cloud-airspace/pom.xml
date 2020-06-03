@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ccssoft</groupId>
-    <artifactId>cloud-task</artifactId>
+    <artifactId>cloud-airspace</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>cloud-task</name>
-    <description>任务管理服务</description>
+    <name>cloud-airspace</name>
+    <description>空域管理服务</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -20,14 +20,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.ccssoft</groupId>
             <artifactId>cloud-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
