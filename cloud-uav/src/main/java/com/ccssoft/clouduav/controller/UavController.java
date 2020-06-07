@@ -1,12 +1,19 @@
 package com.ccssoft.clouduav.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.common.utils.R;
-import com.ccssoft.clouduav.entity.Uav;
+import com.ccssoft.cloudcommon.entity.Uav;
+import com.ccssoft.clouduav.entity.UserUav;
 import com.ccssoft.clouduav.service.UavService;
+import com.ccssoft.clouduav.service.UserUavService;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -22,23 +29,41 @@ import javax.annotation.Resource;
 public class UavController {
     @Resource
     private UavService uavService;
+    @Resource
+    private UserUavService userUavService;
 
+    /**
+     * 注册无人机
+     * @param uav 无人机详情
+     * @return 是否成功
+     */
     @PostMapping("/register")
-    public R registerUav(@RequestBody Uav uav) {
-        log.info("UavController.registerUav(),参数={}",uav);
-        if (uav.getManufacturerName() != null && uav.getUavType() != null && uav.getWeight() != null && uav.getSpeedMax() != null && uav.getUserId() != null) {
-            return uavService.saveUav(uav,uav.getUserId()) == 1 ? R.ok() : R.error(300,"注册失败!");
-        }
-
-        return R.error(301,"注册信息不全");
+    public R registerUav(@Valid @RequestBody Uav uav) {
+        log.info("UavController.registerUav(),参数：uav={}",uav);
+        return uavService.saveUav(uav,uav.getUserId()) == 1 ? R.ok() : R.error(300,"注册失败!");
     }
 
+    //TODO 补全一个修改无人机信息功能
+
+    /**
+     * 获取所有在册无人机分页数据
+     * @param current 当前页
+     * @param size 每页数据量
+     * @return 分页数据
+     */
     @GetMapping("/getUav4Page/{current}&{size}")
     public R getUav4Page (@PathVariable("current") int current, @PathVariable("size") int size) {
         log.info("UavController.getUav4Page(),参数:当前第{}页,一页{}个",current,size);
         return R.ok(uavService.getUav4Page(current,size));
     }
 
+    /**
+     * 根据用户id来获取其本身的无人机列表分页数据
+     * @param current 当前页
+     * @param size 每页数据量
+     * @param userId 用户id
+     * @return 分页数据
+     */
     @GetMapping("/getUavByUserId4Page/{current}&{size}&{id}")
     public R getUavByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size ,@PathVariable("id") Long userId) {
         log.info("UavController.getUavByUserId4Page(),参数:当前第{}页,一页{}个,用户id={}",current,size,userId);
@@ -46,19 +71,44 @@ public class UavController {
         return uavByUserId4Page != null ?R.ok(uavByUserId4Page) : R.error(301,"查询不到无人机！");
     }
 
-    @GetMapping("/getUavById/{id}")
-    public R getUavById (@PathVariable("id") Long uavId) {
-        log.info("UavController.getUavById(),参数={}",uavId);
-        Uav uav = uavService.getUavById(uavId);
-        return uav != null ? R.ok(uav) : R.error(301,"不存在此无人机");
-
-    }
-
+    /**
+     * 删除无人机信息
+     * @param uavId 无人机id
+     * @return 是否成功
+     */
     @GetMapping("/deleteUavById/{id}")
     public R deleteUavById (@PathVariable("id") Long uavId) {
-        //TODO 后续需要对所有前端传过来的数据进行验证
         log.info("UavController.deleteUavById(),参数:无人机id={}",uavId);
         return uavService.removeById(uavId) ? R.ok() : R.error(300,"删除失败！");
+    }
+
+
+    /**
+     * 根据UserId来获取对应的关系列表中的UavId，供远程服务调用
+     * @param userId 用户id
+     * @return 一组uavId数据
+     */
+    @GetMapping("/getUavByUserId")
+    public List<Long> getUavIdByUserId (@RequestParam("userId") Long userId) {
+        log.info("UavController.getUavByUserId(),参数:userId={}",userId);
+        QueryWrapper<UserUav> wrapper = new QueryWrapper();
+        wrapper.eq("user_id",userId);
+        List<Long> list = new ArrayList();
+        for (UserUav userUav : userUavService.list(wrapper)) {
+            list.add(userUav.getUavId());
+        }
+        return list;
+    }
+
+    /**
+     * 可以让task模块远程调用，通过无人机id获取相对应的无人机详情
+     * @param uavId 无人机id
+     * @return 无人机详情
+     */
+    @GetMapping("/getUavById/{id}")
+    public Uav getUavById (@PathVariable("id") Long uavId) {
+        log.info("UavController.getUavById(),参数:uavId={}",uavId);
+        return uavService.getById(uavId);
     }
 }
 

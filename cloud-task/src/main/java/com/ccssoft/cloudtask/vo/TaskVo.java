@@ -1,7 +1,9 @@
 package com.ccssoft.cloudtask.vo;
 
-import com.ccssoft.cloudtask.entity.Task;
+import com.ccssoft.cloudcommon.entity.Task;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author moriarty
@@ -10,4 +12,5 @@ import lombok.Data;
 @Data
 public class TaskVo extends Task {
     private String uavName;
+    private List airspaceName;
 }

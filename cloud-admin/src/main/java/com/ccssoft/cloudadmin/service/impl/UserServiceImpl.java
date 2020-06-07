@@ -2,22 +2,21 @@ package com.ccssoft.cloudadmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ccssoft.cloudadmin.dao.UserDao;
-import com.ccssoft.cloudadmin.entity.User;
+import com.ccssoft.cloudcommon.entity.Task;
+import com.ccssoft.cloudcommon.entity.User;
 import com.ccssoft.cloudadmin.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author moriarty
  * @date 2020/5/20 10:04
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserService {
     @Resource
     private UserDao userDao;
 
@@ -39,22 +38,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getSaltByUsername(username);
     }
 
-    @Override
-    public int updatePassword(User user) {
-        return userDao.updateById(user);
-    }
-
-    @Override
-    public int delUserByUsername(String username) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("username",username);
-        return userDao.delete(wrapper);
-    }
-
-    @Override
-    public int updateUser(User user) {
-        return userDao.updateById(user);
-    }
 
     @Override
     public Page getUserByPage(int current, int size) {

@@ -2,15 +2,14 @@ package com.ccssoft.clouduav.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.clouduav.dao.UserUavDao;
-import com.ccssoft.clouduav.entity.Uav;
 import com.ccssoft.clouduav.dao.UavDao;
 import com.ccssoft.clouduav.entity.UserUav;
 import com.ccssoft.clouduav.service.UavService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -35,8 +34,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
     private UserUavDao userUavDao;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int saveUav(Uav uav, Long userId) {
-        uav.setDeleted(1);
+//        uav.setDeleted(1);
         int result = uavDao.insert(uav);
         UserUav userUav = new UserUav();
         userUav.setUavId(uav.getId());
@@ -72,11 +72,4 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
         return page;
     }
 
-
-    @Override
-    public Uav getUavById(Long uavId) {
-        QueryWrapper<Uav> wrapper = new QueryWrapper();
-        wrapper.eq("id",uavId);
-        return uavDao.selectOne(wrapper);
-    }
 }

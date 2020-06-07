@@ -3,12 +3,13 @@ package com.ccssoft.cloudairspace.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudairspace.dao.UserAirspaceDao;
-import com.ccssoft.cloudairspace.entity.Airspace;
 import com.ccssoft.cloudairspace.dao.AirspaceDao;
 import com.ccssoft.cloudairspace.entity.UserAirspace;
 import com.ccssoft.cloudairspace.service.AirspaceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ccssoft.cloudcommon.entity.Airspace;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     private UserAirspaceDao userAirspaceDao;
 
     @Override
+    @Transactional(rollbackFor=Exception.class)
     public int registerAirSpace(Airspace airspace) {
         airspace.setStatus(0);
         airspace.setGmtCreate(new Date());

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ccssoft.cloudadmin.dao.UserDao">
-    <resultMap id="ResultUser" type="com.ccssoft.cloudadmin.entity.User" >
+    <resultMap id="ResultUser" type="com.ccssoft.cloudcommon.entity.User" >
         <result column="user_id" property="id" jdbcType="INTEGER" />
         <result column="username" property="username" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
@@ -13,7 +13,7 @@
     </resultMap>
 
 
-    <select id="getUserById" resultType="com.ccssoft.cloudadmin.entity.User">
+    <select id="getUserById" resultType="com.ccssoft.cloudcommon.entity.User">
 
     </select>
 

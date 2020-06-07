@@ -11,29 +11,29 @@
         WHERE
         id=#{id};
     </update>
-    <select id="getAirspaceListByIdList" resultType="com.ccssoft.cloudairspace.entity.Airspace" parameterType="java.util.List" >
+    <select id="getAirspaceListByIdList" resultType="com.ccssoft.cloudcommon.entity.Airspace" parameterType="java.util.List" >
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
         id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
         #{item}
         </foreach>
 
     </select>
-    <select id="getAirspaceByAirspaceId" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+    <select id="getAirspaceByAirspaceId" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
         id =#{airspaceId}
     </select>
-    <select id="getAirspaceListByIdListAndTime" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+    <select id="getAirspaceListByIdListAndTime" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 1 and(#{date} between start_time and end_time) and
         id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
         #{item}
         </foreach>
     </select>
-    <select id="getAirspaceNotAllow" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+    <select id="getAirspaceNotAllow" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 0
     </select>
-    <select id="getAirspaceByAirspaceIds" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+    <select id="getAirspaceByAirspaceIds" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 1 and
         id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">

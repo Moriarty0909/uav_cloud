@@ -1,11 +1,14 @@
-package com.ccssoft.clouduav.entity;
+package com.ccssoft.cloudcommon.entity;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.ccssoft.cloudcommon.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -23,26 +26,31 @@ public class Uav extends BaseEntity {
     /**
      * 无人机昵称
      */
+
     private String nickname;
     /**
      * 无人机厂商
      */
+    @NotBlank(message = "无人机厂商名称不能为空！")
     @TableField("Manufacturer_name")
     private String manufacturerName;
 
     /**
      * 无人机型号
      */
+    @NotBlank(message = "无人机厂商名称不能为空！")
     private String uavType;
 
     /**
      * 空重
      */
+    @NotNull(message = "重量不能为空！")
     private Double weight;
 
     /**
      * 最大飞行速度
      */
+    @NotNull(message = "最大时速不能为空！")
     private Double speedMax;
 
 
@@ -55,6 +63,7 @@ public class Uav extends BaseEntity {
     /**
      * 附加数据
      */
+    @NotNull(message = "所有者不能为空！")
     private transient Long userId;
 
 

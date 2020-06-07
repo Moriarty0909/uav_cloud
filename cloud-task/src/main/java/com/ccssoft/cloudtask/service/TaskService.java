@@ -1,7 +1,6 @@
 package com.ccssoft.cloudtask.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ccssoft.cloudtask.entity.Task;
+import com.ccssoft.cloudcommon.entity.Task;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.ArrayList;
 

@@ -1,10 +1,8 @@
 package com.ccssoft.clouduav.dao;
 
-import com.ccssoft.clouduav.entity.Uav;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
+import com.ccssoft.cloudcommon.entity.Uav;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>

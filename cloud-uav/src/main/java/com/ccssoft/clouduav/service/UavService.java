@@ -1,8 +1,8 @@
 package com.ccssoft.clouduav.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ccssoft.clouduav.entity.Uav;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ccssoft.cloudcommon.entity.Uav;
 
 /**
  * <p>
@@ -20,5 +20,4 @@ public interface UavService extends IService<Uav> {
 
     Page getUavByUserId4Page(int current, int size, Long id);
 
-    Uav getUavById(Long uavId);
 }

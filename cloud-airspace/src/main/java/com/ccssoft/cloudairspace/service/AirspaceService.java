@@ -1,9 +1,7 @@
 package com.ccssoft.cloudairspace.service;
 
-import com.ccssoft.cloudairspace.entity.Airspace;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ccssoft.cloudcommon.common.utils.R;
-
+import com.ccssoft.cloudcommon.entity.Airspace;
 import java.util.Date;
 import java.util.List;
 

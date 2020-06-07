@@ -1,20 +1,23 @@
 package com.ccssoft.cloudtask.controller;
 
+import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.common.utils.R;
-import com.ccssoft.cloudtask.entity.Task;
+import com.ccssoft.cloudcommon.entity.Airspace;
+import com.ccssoft.cloudcommon.entity.Task;
+import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.cloudtask.service.AirspaceService;
 import com.ccssoft.cloudtask.service.TaskService;
+import com.ccssoft.cloudtask.service.UavService;
 import com.ccssoft.cloudtask.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,9 @@ public class TaskController {
     @Resource
     private AirspaceService airspaceService;
 
+    @Resource
+    private UavService uavService;
+
     //TODO 是否需要一个判断飞机飞行返回时间是否有在任意计划内的告警提示
 
     /**
@@ -60,7 +66,7 @@ public class TaskController {
 
     /**
      * 更改计划详情
-     * @param task
+     * @param task 更改后的计划详情
      * @return R
      */
     @PostMapping("/updateInfo")
@@ -113,23 +119,58 @@ public class TaskController {
     @GetMapping("/getAllTask4Page/{current}&{size}")
     public R getAllTask4Page (@PathVariable("current") int current, @PathVariable("size") int size) {
         log.info("TaskController.getAllTask4Page(),参数:当前页数={}，一页{}个数据.",current,size);
+        return R.ok(getTheVoPage(current,size,null));
+    }
 
+    /**
+     * 分页获取对应用户所有飞机计划数据
+     * @param current 当前页数
+     * @param size 每页数量
+     * @return R
+     */
+    @GetMapping("/getTaskByUserId4Page/{current}&{size}&{userId}")
+    public R getTaskByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size, @PathVariable("userId") Long userId) {
+        log.info("TaskController.getAllTask4Page(),参数:当前页数={}，一页{}个数据.",current,size);
+        //获取user对应的task
+        List<Long> uavIds = uavService.getUavIdByUserId(userId);
+        return R.ok(getTheVoPage(current,size,uavIds));
+    }
+
+
+    private Page getTheVoPage (int current, int size,List uavIds) {
+        QueryWrapper<Task> wrapper = new QueryWrapper();
         Page<Task> page = new Page<>(current,size);
-        taskService.page(page,null);
-        List<Task> records = page.getRecords();
-        for (Task task : records) {
-            TaskVo taskVo = new TaskVo();
-            BeanUtils.copyProperties(task,taskVo);
-            //TODO 调用远程方法查询对应的无人机名称，空域名称，用途set进vo里返回前端页面
-            airspaceService
-            taskVo.setUavName("gogogo");
 
+        if (uavIds == null) {
+            taskService.page(page,null);
+        } else {
+            wrapper.in("uav_id",uavIds);
+            taskService.page(page,wrapper);
         }
 
 
+        List<TaskVo> list = new ArrayList<>();
+        for (Task task : page.getRecords()) {
+            TaskVo taskVo = new TaskVo();
+            BeanUtils.copyProperties(task,taskVo);
 
+            List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceByTaskId(task.getId()));
+            List nameList = new ArrayList();
+            for (Airspace airspace : airSpaceList) {
+                Console.log(airspace);
+                nameList.add(airspace.getAirspaceName());
+            }
+            taskVo.setAirspaceName(nameList);
+            Uav uav = uavService.getUavById(task.getUavId());
+            taskVo.setUavName(uav.getNickname());
+            //TODO 调用远程方法查询对应的用途set进vo里返回前端页面
 
-        return R.ok(taskVo);
+            list.add(taskVo);
+        }
+        Page<TaskVo> pageNeed = new Page<>();
+        BeanUtils.copyProperties(page,pageNeed);
+        pageNeed.setRecords(list);
+        return pageNeed;
     }
 
 }

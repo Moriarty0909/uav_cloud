@@ -1,19 +1,15 @@
-package com.ccssoft.cloudairspace.entity;
+package com.ccssoft.cloudcommon.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
-
 import com.ccssoft.cloudcommon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Transient;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * <p>
@@ -33,6 +29,7 @@ public class Airspace extends BaseEntity {
     /**
      * 空域名称
      */
+    @NotBlank(message = "空域名称不能为空！")
     private String airspaceName;
 
     /**
@@ -44,18 +41,21 @@ public class Airspace extends BaseEntity {
     /**
      * 具体空域范围坐标
      */
+    @NotBlank(message = "空域坐标组不能为空！")
     private String airspacePoint;
 
     /**
      * 空域开始使用时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @NotNull(message = "空域起止时间不能为空！")
     private Date startTime;
 
     /**
      * 空域结束使用时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @NotNull(message = "空域起止时间不能为空！")
     private Date endTime;
 
     /**

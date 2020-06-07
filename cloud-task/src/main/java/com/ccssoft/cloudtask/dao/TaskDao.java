@@ -1,6 +1,6 @@
 package com.ccssoft.cloudtask.dao;
 
-import com.ccssoft.cloudtask.entity.Task;
+import com.ccssoft.cloudcommon.entity.Task;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

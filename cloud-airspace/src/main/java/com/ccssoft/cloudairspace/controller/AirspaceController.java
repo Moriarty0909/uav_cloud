@@ -1,17 +1,13 @@
 package com.ccssoft.cloudairspace.controller;
 
-import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
-import com.ccssoft.cloudairspace.entity.Airspace;
 import com.ccssoft.cloudairspace.service.AirspaceService;
 import com.ccssoft.cloudcommon.common.utils.R;
-import feign.Param;
+import com.ccssoft.cloudcommon.entity.Airspace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import sun.tools.jconsole.JConsole;
-
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,10 +33,12 @@ public class AirspaceController {
      * @return
      */
     @PostMapping("/registerAS")
-    public R registerAirSpace (@RequestBody Airspace airspace) {
+    public R registerAirSpace (@Valid @RequestBody Airspace airspace) {
         log.info("AirspaceController.registerAirSpace(),参数={}",airspace);
         return airspaceService.registerAirSpace(airspace) == 1 ? R.ok() : R.error(300,"注册失败！");
     }
+
+    //TODO 修改空域功能需要补上
 
     /**
      * 批准空域
@@ -93,6 +91,9 @@ public class AirspaceController {
         Airspace airspace = airspaceService.getAirspaceByAirspaceId(airspaceId);
         return airspace != null ? R.ok(airspace) : R.error(301,"无查询数据！");
     }
+
+    //TODO 还需要一个删除的方法
+
 
     /**
      * 可以让task模块远程调用，通过一组id获取相对应的空域详情

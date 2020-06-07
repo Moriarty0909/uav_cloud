@@ -1,8 +1,7 @@
-package com.ccssoft.cloudtask.entity;
+package com.ccssoft.cloudcommon.entity;
 
 import java.util.Date;
 import java.util.List;
-
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.ccssoft.cloudcommon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;

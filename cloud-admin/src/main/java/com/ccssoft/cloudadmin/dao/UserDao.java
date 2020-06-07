@@ -1,9 +1,7 @@
 package com.ccssoft.cloudadmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ccssoft.cloudadmin.entity.User;
-import com.ccssoft.cloudcommon.common.utils.R;
-import org.apache.ibatis.annotations.Mapper;
+import com.ccssoft.cloudcommon.entity.User;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,9 +1,8 @@
 package com.ccssoft.cloudairspace.dao;
 
-import com.ccssoft.cloudairspace.entity.Airspace;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ccssoft.cloudcommon.entity.Airspace;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;

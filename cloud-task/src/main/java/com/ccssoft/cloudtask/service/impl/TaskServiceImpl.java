@@ -2,12 +2,10 @@ package com.ccssoft.cloudtask.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudtask.dao.TaskAirspaceDao;
-import com.ccssoft.cloudtask.entity.Task;
+import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudtask.dao.TaskDao;
 import com.ccssoft.cloudtask.entity.TaskAirspace;
-import com.ccssoft.cloudtask.service.AirspaceService;
 import com.ccssoft.cloudtask.service.TaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -74,6 +72,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
 
         //考虑到空域关系可能多一条也可能少一条，还是删了重建比较方便
         taskAirspaceDao.deleteById(task.getId());
+
+        //TODO 这里没有写正确
         return insertTaskAirspace(task, result, list);
     }
 
