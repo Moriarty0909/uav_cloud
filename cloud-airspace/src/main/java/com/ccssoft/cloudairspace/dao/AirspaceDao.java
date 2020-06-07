@@ -31,4 +31,6 @@ public interface AirspaceDao extends BaseMapper<Airspace> {
     List<Airspace> getAirspaceListByIdListAndTime(List list, Date date);
 
     List<Airspace> getAirspaceNotAllow();
+
+    List<Airspace> getAirspaceByAirspaceIds(List list);
 }

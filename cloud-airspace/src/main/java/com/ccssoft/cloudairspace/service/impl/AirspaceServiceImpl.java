@@ -1,5 +1,6 @@
 package com.ccssoft.cloudairspace.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudairspace.dao.UserAirspaceDao;
 import com.ccssoft.cloudairspace.entity.Airspace;
@@ -53,7 +54,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("user_id",userId);
         List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
-        if (userAirspaces.size() == 0) {
+        if (ObjectUtil.length(userAirspaces) == 0) {
             return null;
         }
 
@@ -75,7 +76,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("user_id",userId);
         List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
-        if (userAirspaces.size() == 0) {
+        if (ObjectUtil.length(userAirspaces) == 0) {
             return null;
         }
 
@@ -91,5 +92,10 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     @Override
     public List<Airspace> getAllAirspaceNotAllow() {
         return airspaceDao.getAirspaceNotAllow();
+    }
+
+    @Override
+    public List<Airspace> getAirspaceByAirspaceIds(List list) {
+        return airspaceDao.getAirspaceByAirspaceIds(list);
     }
 }

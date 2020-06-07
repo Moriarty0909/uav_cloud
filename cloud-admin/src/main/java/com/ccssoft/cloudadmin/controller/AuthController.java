@@ -30,7 +30,7 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseBody
     public R registerUser(@RequestBody User user) {
-        log.info("进入AuthController.registerUser(),参数="+user.toString());
+        log.info("进入AuthController.registerUser(),参数={}",user);
         //TODO 后续挨个验证，防止前端传过来的数据使后端异常。
         if (user != null && userService.getUserByUsername(user.getUsername()) == null) {
             //处理一下密码加密，暂时先不用了，毕竟security已自带
@@ -45,7 +45,7 @@ public class AuthController {
     @PostMapping("/changePassword")
     @ResponseBody
     public R changePassword (@RequestBody User user) {
-        log.info("进入AuthController.changePassword(),参数="+user.toString());
+        log.info("进入AuthController.changePassword(),参数={}",user);
         if (user.getUsername() != null && user.getPassword() != null && userService.getUserByUsername(user.getUsername()) != null) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             if (userService.updatePassword(user) == 1) {
@@ -60,7 +60,7 @@ public class AuthController {
     @PostMapping("/updateInfo")
     @ResponseBody
     public R updateInfo (@RequestBody User user) {
-        log.info("进入AuthController.updateInfo(),参数="+user.toString());
+        log.info("进入AuthController.updateInfo(),参数={}",user);
         //TODO 后续确认那些数据不能为null再细致补充
         if (user != null) {
             userService.updateUser(user);
@@ -73,14 +73,14 @@ public class AuthController {
     @GetMapping("/deleteUser/{username}")
     @ResponseBody
     public R delUser (@PathVariable("username") String username) {
-        log.info("进入AuthController.delUser(),参数="+username);
+        log.info("进入AuthController.delUser(),参数={}",username);
         return userService.delUserByUsername(username) == 1 ? R.ok() : R.error(301,"不存在此用户！");
     }
 
     @GetMapping("/getUser/{username}")
     @ResponseBody
     public R getInfo(@PathVariable("username") String username) {
-        log.info("进入AuthController.getInfo(),参数="+username);
+        log.info("进入AuthController.getInfo(),参数={}",username);
         User user = userService.getUserByUsername(username);
         return user != null ? R.ok(user) : R.error(301,"不存在此用户！");
     }
@@ -88,7 +88,7 @@ public class AuthController {
     @GetMapping("/getUser4Page/{current}&{size}")
     @ResponseBody
     public R getUser4Page(@PathVariable("current") int current, @PathVariable("size") int size){
-        log.info("进入AuthController.getUserByPage(),参数="+current+","+size);
+        log.info("进入AuthController.getUserByPage(),参数={}",current+","+size);
         Page page = userService.getUserByPage(current,size);
         return R.ok(page);
     }
@@ -97,5 +97,7 @@ public class AuthController {
     public String login() {
         return "login";
     }
+
+    //TODO 验证码
 
 }

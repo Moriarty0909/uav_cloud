@@ -33,4 +33,11 @@
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 0
     </select>
+    <select id="getAirspaceByAirspaceIds" resultType="com.ccssoft.cloudairspace.entity.Airspace">
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
+        where status = 1 and
+        id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </select>
 </mapper>

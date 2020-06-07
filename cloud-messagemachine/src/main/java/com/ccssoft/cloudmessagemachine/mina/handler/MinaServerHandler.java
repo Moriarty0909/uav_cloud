@@ -31,7 +31,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
         // 获取客户端ip
         InetSocketAddress socketAddress = (InetSocketAddress) session.getRemoteAddress();
         InetAddress inetAddress = socketAddress.getAddress();
-        log.info("sessionCreated  id=" + session.getId() + " , ip=" + inetAddress.getHostAddress());
+        log.info("sessionCreated id={},ip={}",session.getId(),inetAddress.getHostAddress());
     }
 
     /**
@@ -72,7 +72,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
-        log.info( "IDLE " + session.getIdleCount( status ));
+        log.info( "IDLE:{}",session.getIdleCount( status ));
     }
 
     /**
@@ -98,7 +98,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
         // 读取客户端消息
         String str = message.toString();
         Message messageWeNeed = ComonUtils.toMessageWeNeed(str,session);
-        log.info("Message from session ["+session.getId()+"]: "+messageWeNeed.toString());
+        log.info("Message from session [{}]: {}",session.getId(),messageWeNeed);
 
         WebsocketService websocketService = new WebsocketService();
         //暂时先只发位置过去就行
@@ -120,7 +120,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
         super.messageSent(session, message);
-        log.info("messageSent : " + message);
+        log.info("messageSent : {}",message);
     }
 
     /**

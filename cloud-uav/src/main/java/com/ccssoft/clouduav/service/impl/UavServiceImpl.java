@@ -72,10 +72,6 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
         return page;
     }
 
-    @Override
-    public int deleteUavById(Long uavId) {
-        return uavDao.deleteById(uavId);
-    }
 
     @Override
     public Uav getUavById(Long uavId) {

@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author moriarty
  * @since 2020-06-02
  */
-public interface TaskAirspaceMapper extends BaseMapper<TaskAirspace> {
+public interface TaskAirspaceDao extends BaseMapper<TaskAirspace> {
 
 }

@@ -28,4 +28,6 @@ public interface AirspaceService extends IService<Airspace> {
     List<Airspace> getASByUserIdPremiseTime(Long userId, Date date);
 
     List<Airspace> getAllAirspaceNotAllow();
+
+    List<Airspace> getAirspaceByAirspaceIds(List list);
 }

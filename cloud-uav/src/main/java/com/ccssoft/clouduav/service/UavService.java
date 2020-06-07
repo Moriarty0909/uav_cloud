@@ -20,7 +20,5 @@ public interface UavService extends IService<Uav> {
 
     Page getUavByUserId4Page(int current, int size, Long id);
 
-    int deleteUavById(Long uavId);
-
     Uav getUavById(Long uavId);
 }

@@ -35,5 +35,8 @@ public class TaskAirspace implements Serializable {
      */
     private Long airspaceId;
 
-
+    public TaskAirspace(Long taskId, Long airspaceId) {
+        this.taskId = taskId;
+        this.airspaceId = airspaceId;
+    }
 }

@@ -1,0 +1,40 @@
+server:
+  port: 13001
+
+spring:
+  application:
+    name: task-server
+  datasource:
+    url: jdbc:mysql://183.56.219.211:33066/uav_cloud?useUnicode=true&characterEncoding=utf8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  redis:
+    port: 6379
+    host: 183.56.219.211
+    timeout: 30000
+    database: 0
+    jedis:
+      pool:
+        min-idle: 10000
+  session:
+    store-type: redis
+#设置feign客户端超时时间(OpenFeign默认支持ribbon)
+ribbon:
+  #指的是建立连接所用的时间，适用于网络状况正常的情况下，两端连接所用的时间
+  ReadTimeout: 5000
+  #指的是建立连接后从服务器读取到可用资源所用的时间
+  ConnectTimeout: 5000
+
+
+mybatis-plus:
+  type-aliases-package: com.ccssoft.cloudtask.entity
+  mapper-locations: classpath:mybatis-mappers/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 0 #逻辑删除(默认为1)
+      logic-not-delete-value: 1 #逻辑未删除(默认为0)
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #默认的控制台输出
