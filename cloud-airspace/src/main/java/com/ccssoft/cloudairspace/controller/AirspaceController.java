@@ -38,44 +38,54 @@ public class AirspaceController {
         return airspaceService.registerAirSpace(airspace) == 1 ? R.ok() : R.error(300,"注册失败！");
     }
 
-    //TODO 修改空域功能需要补上
+    /**
+     * 修改空域信息
+     * @param airspace 空域详情
+     * @return 成功与否
+     */
+    @PostMapping("/updateInfo")
+    public R updateInfo (@Valid @RequestBody Airspace airspace) {
+        log.info("AirspaceController.updateInfo(),参数={}",airspace);
+        return airspaceService.updateAirSpace(airspace) == 1 ? R.ok() : R.error(300,"更新失败！");
+    }
 
     /**
      * 批准空域
-     * @param id 空域id
-     * @return
+     * @param airspaceId 空域id
+     * @return R
      */
     @GetMapping("/approval/{id}")
-    public R approval (@PathVariable("id") Long id) {
-        log.info("AirspaceController.approval(),参数={}",id);
-        return airspaceService.approvalById(id) == 1 ?R.ok() :R.error(300,"批准失败！");
+    public R approval (@PathVariable("id") Long airspaceId) {
+        log.info("AirspaceController.approval(),参数:airspaceId={}",airspaceId);
+        return airspaceService.approvalById(airspaceId) == 1 ?R.ok() :R.error(300,"批准失败！");
     }
 
     /**
      * 获取所有待审批的空域
+     * @return R
      */
-    @GetMapping("/getAllAirspaceNotAllow")
-    public R getAllAirspaceNotAllow () {
-        log.info("AirspaceController.getAllAirspaceNotAllow()");
-        return R.ok(airspaceService.getAllAirspaceNotAllow());
+    @GetMapping("/getAllAirspaceNotAllow/{current}&{siz}")
+    public R getAllAirspaceNotAllow (@PathVariable("current") int current, @PathVariable("current") int size) {
+        log.info("AirspaceController.getAllAirspaceNotAllow(),参数：当前页数={},每页数量=",current,size);
+        return R.ok(airspaceService.getAllAirspaceNotAllow(current,size));
     }
 
 
     /**
      * 批量查询符合条件的所有空域
      * @param userId 用户id
-     * @param date 如果时间为null就直接查处和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内
+     * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内
      * @return
      */
     @GetMapping("/getASByUserId/{id}&{time}")
     public R getASByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date) {
         log.info("AirspaceController.getASByUserId(),参数={},{}",userId,date);
         if (date != null) {
-            List<Airspace> asByUserIdPremiseTime = airspaceService.getASByUserIdPremiseTime(userId, date);
+            List<Airspace> asByUserIdPremiseTime = airspaceService.getAirspaceByUserIdPremiseTime(userId, date);
 
             return ObjectUtil.length(asByUserIdPremiseTime) != 0 ? R.ok(asByUserIdPremiseTime) : R.error(301,"无查询数据！");
         } else {
-            List list = airspaceService.getASByUserId(userId);
+            List list = airspaceService.getAirspaceByUserId(userId);
             return ObjectUtil.length(list) != 0 ? R.ok(list) : R.error(301, "无查询数据！");
         }
     }
@@ -92,7 +102,17 @@ public class AirspaceController {
         return airspace != null ? R.ok(airspace) : R.error(301,"无查询数据！");
     }
 
-    //TODO 还需要一个删除的方法
+    /**
+     * 删除空域
+     * @param airspaceId 空域id
+     * @return 是否成功
+     */
+    @GetMapping("/deleteAirspace/{id}")
+    public R deleteAirspace (@PathVariable("id") Long airspaceId) {
+        log.info("AirspaceController.deleteAirspace(),参数:airspaceId={}",airspaceId);
+        return airspaceService.removeById(airspaceId) ? R.ok() :R.error(300,"删除失败！");
+    }
+
 
 
     /**

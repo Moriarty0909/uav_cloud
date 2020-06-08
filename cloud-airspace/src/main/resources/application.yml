@@ -21,7 +21,7 @@ spring:
 
 
 mybatis-plus:
-  type-aliases-package: com.ccssoft.cloudairspace.entity
+  type-aliases-package: com.ccssoft.cloudcommon.entity
   mapper-locations: classpath:mybatis-mappers/*.xml
   global-config:
     db-config:

@@ -82,7 +82,7 @@ public class Task extends BaseEntity {
      * 逻辑删除
      */
     @TableLogic
-    private int deleted;
+    private Integer deleted;
 
     /**
      * 对应执行任务的飞机编号

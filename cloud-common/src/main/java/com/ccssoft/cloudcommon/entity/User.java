@@ -1,14 +1,9 @@
 package com.ccssoft.cloudcommon.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ccssoft.cloudcommon.entity.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-
+import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -16,14 +11,13 @@ import javax.validation.constraints.NotNull;
  * @author moriarty
  * @date 2020/5/19 15:30
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName("sys_user")
 public class User extends BaseEntity {
     private static final long serialVersionUID = 4010728069921493163L;
     /**
-     * 用户id
+     * 用户名
      */
     @NotBlank(message = "用户名不能为空！")
     private String username;
@@ -39,7 +33,17 @@ public class User extends BaseEntity {
     @NotBlank(message = "名称不能为空！")
     private String name;
 
-    //TODO 需要加个地址？个人怎么加？家庭住址？
+    /**
+     * 个人家庭住址/企业地址
+     */
+    @NotBlank(message = "地址不能为空！")
+    private String address;
+
+    /**
+     * 身份证号/社会信用代码
+     */
+    @NotBlank(message = "地址不能为空！")
+    private String ip;
 
     private String salt;
 

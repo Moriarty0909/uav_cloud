@@ -10,7 +10,6 @@ import com.ccssoft.cloudtask.service.TaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +32,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
 
 
     @Override
-    @Transactional(rollbackFor=Exception.class) //开启事务管理
+    @Transactional(rollbackFor=Exception.class)
     public int createPlan(Task task) {
-        task.setDeleted(1);
         int result = taskDao.insert(task);
+
         List<Long> list = task.getAirspaceId();
         return insertTaskAirspace(task, result, list);
     }
@@ -54,10 +53,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
     }
 
     @Override
-    @Transactional(rollbackFor=Exception.class)
     public int updateStatusById(Long taskId) {
-        QueryWrapper wrapper = new QueryWrapper();
-        wrapper.eq("task_id",taskId);
+        QueryWrapper<Task> wrapper = new QueryWrapper();
+        wrapper.eq("id",taskId);
         return taskDao.updateById(taskDao.selectOne(wrapper).setStatus(1)) == 1 ? 1:0;
     }
 
@@ -73,8 +71,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
         //考虑到空域关系可能多一条也可能少一条，还是删了重建比较方便
         taskAirspaceDao.deleteById(task.getId());
 
-        //TODO 这里没有写正确
-        return insertTaskAirspace(task, result, list);
+        return insertTaskAirspace(task, result, list) ;
     }
 
     private int insertTaskAirspace(Task task, int result, List<Long> list) {

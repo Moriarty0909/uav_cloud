@@ -5,12 +5,21 @@
         INSERT INTO airspace  ( airspace_name, status,airspace_point, start_time, end_time, gmt_create, gmt_modified )  VALUES
         ( #{airspaceName}, #{status}, ST_GeomFromText(#{airspacePoint}), #{startTime}, #{endTime}, #{gmtCreate} ,#{gmtModified})
     </insert>
+
     <update id="updateStatusById">
         UPDATE airspace
         SET status=1
         WHERE
         id=#{id};
     </update>
+
+    <update id="updateInfo">
+        UPDATE airspace
+        SET airspace_name=#{airspaceName},status=#{status},airspace_point=ST_GeomFromText(#{airspacePoint}),start_time=#{startTime},end_time=#{endTime}
+        WHERE
+        id=#{id};
+    </update>
+
     <select id="getAirspaceListByIdList" resultType="com.ccssoft.cloudcommon.entity.Airspace" parameterType="java.util.List" >
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
         id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
@@ -18,10 +27,12 @@
         </foreach>
 
     </select>
+
     <select id="getAirspaceByAirspaceId" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace where status = 1 and
         id =#{airspaceId}
     </select>
+
     <select id="getAirspaceListByIdListAndTime" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 1 and(#{date} between start_time and end_time) and
@@ -29,10 +40,12 @@
         #{item}
         </foreach>
     </select>
+
     <select id="getAirspaceNotAllow" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 0
     </select>
+
     <select id="getAirspaceByAirspaceIds" resultType="com.ccssoft.cloudcommon.entity.Airspace">
         select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
         where status = 1 and

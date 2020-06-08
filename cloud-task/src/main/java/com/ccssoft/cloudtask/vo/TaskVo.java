@@ -11,6 +11,18 @@ import java.util.List;
  */
 @Data
 public class TaskVo extends Task {
+    /**
+     * 无人机名称
+     */
     private String uavName;
+
+    /**
+     * 空域名称
+     */
     private List airspaceName;
+
+    /**
+     * 用途名称
+     */
+    private String natrueName;
 }

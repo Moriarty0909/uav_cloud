@@ -5,12 +5,9 @@ import com.ccssoft.cloudcommon.entity.User;
 import com.ccssoft.cloudadmin.service.UserService;
 import com.ccssoft.cloudcommon.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.validation.Valid;
 
@@ -25,8 +22,6 @@ import javax.validation.Valid;
 public class AuthController {
     @Resource
     private UserService userService;
-    @Value("${server.port}")
-    private String port;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -35,10 +30,10 @@ public class AuthController {
     public R registerUser(@Valid @RequestBody User user) {
         log.info("进入AuthController.registerUser(),参数={}",user);
         //处理一下密码加密，暂时先不用了，毕竟security已自带
-//        String salt = String.valueOf((int)(Math.random()*1000000));
-//        user.setSalt(salt);
+        //String salt = String.valueOf((int)(Math.random()*1000000));
+        //user.setSalt(salt);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userService.saveUser(user) == 1 ? R.ok() :R.error(300,"用户注册失败");
+        return userService.saveDB(user) ? R.ok() :R.error(300,"用户注册失败或用户名重复");
     }
     @PostMapping("/changePassword")
     @ResponseBody
@@ -59,7 +54,7 @@ public class AuthController {
     @ResponseBody
     public R delUser (@PathVariable("id") Long id) {
         log.info("进入AuthController.delUser(),参数:userId={}",id);
-        return userService.removeById(id) ? R.ok() : R.error(301,"不存在此用户！");
+        return userService.removeById(id) ? R.ok() : R.error(301,"删除失败！");
     }
 
     @GetMapping("/getUser/{username}")

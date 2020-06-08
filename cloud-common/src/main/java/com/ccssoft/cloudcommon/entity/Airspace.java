@@ -35,8 +35,14 @@ public class Airspace extends BaseEntity {
     /**
      * 空域审批状态 0:禁用 1:正常
      */
-    @TableLogic
+
     private Integer status;
+
+    /**
+     * 逻辑删除
+     */
+    @TableLogic
+    private Integer deleted;
 
     /**
      * 具体空域范围坐标
@@ -61,5 +67,6 @@ public class Airspace extends BaseEntity {
     /**
      * 附加数据
      */
-    private transient Object data;
+    @NotNull(message = "空域所属不能为空！")
+    private transient Long userId;
 }

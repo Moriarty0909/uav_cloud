@@ -1,5 +1,6 @@
 package com.ccssoft.cloudairspace.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ccssoft.cloudcommon.entity.Airspace;
 import java.util.Date;
@@ -15,17 +16,61 @@ import java.util.List;
  */
 public interface AirspaceService extends IService<Airspace> {
 
+    /**
+     * 注册空域，并且注册与其相关联的用户关系
+     * @param airspace 空域详情包含与之相关的用户id
+     * @return 成功与否
+     */
     int registerAirSpace(Airspace airspace);
 
-    int approvalById(Long id);
+    /**
+     * 批准空域
+     * @param airspaceId 空域id
+     * @return 成功与否
+     */
+    int approvalById(Long airspaceId);
 
-    List<Airspace> getASByUserId(Long userId);
+    /**
+     * 通过用户id获取与之相匹配的一组空域
+     * @param userId
+     * @return 成功获取则返回一组空域详情，如果失败则返回null
+     */
+    List<Airspace> getAirspaceByUserId(Long userId);
 
+    /**
+     * 通过空域id获取与之对应的空域信息
+     * @param airspaceId 空域id
+     * @return 空域详情
+     */
     Airspace getAirspaceByAirspaceId(Long airspaceId);
 
-    List<Airspace> getASByUserIdPremiseTime(Long userId, Date date);
+    /**
+     * 通过用户id与计划预计开始时间获取符合条件的对应空域信息
+     * @param userId 用户id
+     * @param date 计划预计开始时间
+     * @return 成功获取则返回一组空域详情，如果失败则返回null
+     */
+    List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, Date date);
 
-    List<Airspace> getAllAirspaceNotAllow();
+    /**
+     * 获取未批准的空域分页数据
+     * @param current 当前页数
+     * @param size 每页数据量
+     * @return 分页数据
+     */
+    Page<Airspace> getAllAirspaceNotAllow(int current, int size);
 
-    List<Airspace> getAirspaceByAirspaceIds(List list);
+    /**
+     * 获取一组对应所需一组空域id的空域详情
+     * @param AirspaceIdlist 一组空域id
+     * @return 一组空域详情
+     */
+    List<Airspace> getAirspaceByAirspaceIds(List AirspaceIdlist);
+
+    /**
+     * 修改空域id，并在每次修改之后需要把批准状态置换为未批准
+     * @param airspace 空域详情
+     * @return 成功与否
+     */
+    int updateAirSpace(Airspace airspace);
 }

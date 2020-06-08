@@ -9,6 +9,7 @@ import com.ccssoft.cloudcommon.entity.Airspace;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.cloudtask.service.AirspaceService;
+import com.ccssoft.cloudtask.service.TaskNatrueService;
 import com.ccssoft.cloudtask.service.TaskService;
 import com.ccssoft.cloudtask.service.UavService;
 import com.ccssoft.cloudtask.vo.TaskVo;
@@ -50,7 +51,10 @@ public class TaskController {
     @Resource
     private UavService uavService;
 
-    //TODO 是否需要一个判断飞机飞行返回时间是否有在任意计划内的告警提示
+    @Resource
+    private TaskNatrueService taskNatrueService;
+
+    //TODO 是否需要一个判断飞机飞行中返回时间是否有在任意计划内的告警提示
 
     /**
      * 创建计划
@@ -140,7 +144,7 @@ public class TaskController {
     private Page getTheVoPage (int current, int size,List uavIds) {
         QueryWrapper<Task> wrapper = new QueryWrapper();
         Page<Task> page = new Page<>(current,size);
-
+        //判断是有用户需求的还是无需求的
         if (uavIds == null) {
             taskService.page(page,null);
         } else {
@@ -148,12 +152,12 @@ public class TaskController {
             taskService.page(page,wrapper);
         }
 
-
+        //根据获得的计划数据进行拆分调用组装数据到vo里
         List<TaskVo> list = new ArrayList<>();
         for (Task task : page.getRecords()) {
             TaskVo taskVo = new TaskVo();
             BeanUtils.copyProperties(task,taskVo);
-
+            //获取空域的名称
             List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceByTaskId(task.getId()));
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
@@ -161,12 +165,15 @@ public class TaskController {
                 nameList.add(airspace.getAirspaceName());
             }
             taskVo.setAirspaceName(nameList);
+            //获取无人机的名称
             Uav uav = uavService.getUavById(task.getUavId());
             taskVo.setUavName(uav.getNickname());
-            //TODO 调用远程方法查询对应的用途set进vo里返回前端页面
+            //获取用途的名称
+            taskVo.setNatrueName(taskNatrueService.getById(task.getTaskNatureId()).getTaskNatrueName());
 
             list.add(taskVo);
         }
+        //复制并重新装配
         Page<TaskVo> pageNeed = new Page<>();
         BeanUtils.copyProperties(page,pageNeed);
         pageNeed.setRecords(list);

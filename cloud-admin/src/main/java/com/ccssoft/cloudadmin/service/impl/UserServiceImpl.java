@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ccssoft.cloudadmin.dao.UserDao;
-import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudcommon.entity.User;
 import com.ccssoft.cloudadmin.service.UserService;
 import org.springframework.stereotype.Service;
@@ -20,11 +19,6 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Resource
     private UserDao userDao;
 
-    @Override
-    public int saveUser(User user) {
-        user.setStatus(1);
-        return userDao.insert(user);
-    }
 
     @Override
     public User getUserByUsername(String username) {
@@ -44,5 +38,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         Page<User> page = new Page<>(current,size);
         userDao.selectPage(page,null);
         return page;
+    }
+
+    @Override
+    public boolean saveDB(User user) {
+        QueryWrapper<User> wrapper = new QueryWrapper();
+        wrapper.eq("username",user.getUsername());
+        if (userDao.selectOne(wrapper) == null) {
+            return userDao.insert(user) ==1 ? true : false;
+        }
+        return false;
     }
 }

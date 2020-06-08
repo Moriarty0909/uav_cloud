@@ -32,4 +32,6 @@ public interface AirspaceDao extends BaseMapper<Airspace> {
     List<Airspace> getAirspaceNotAllow();
 
     List<Airspace> getAirspaceByAirspaceIds(List list);
+
+    int updateInfo(Airspace airspace);
 }

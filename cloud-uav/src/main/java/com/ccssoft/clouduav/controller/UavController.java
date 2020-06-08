@@ -8,7 +8,6 @@ import com.ccssoft.clouduav.entity.UserUav;
 import com.ccssoft.clouduav.service.UavService;
 import com.ccssoft.clouduav.service.UserUavService;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -43,7 +42,16 @@ public class UavController {
         return uavService.saveUav(uav,uav.getUserId()) == 1 ? R.ok() : R.error(300,"注册失败!");
     }
 
-    //TODO 补全一个修改无人机信息功能
+    /**
+     * 更新信息
+     * @param uav 无人机信息
+     * @return 成功与否
+     */
+    @PostMapping("/updateInfo")
+    public R updateInfo (@Valid @RequestBody Uav uav) {
+        log.info("UavController.updateInfo(),参数：uav={}",uav);
+        return uavService.updateById(uav) ? R.ok() : R.error(300,"修改失败！");
+    }
 
     /**
      * 获取所有在册无人机分页数据

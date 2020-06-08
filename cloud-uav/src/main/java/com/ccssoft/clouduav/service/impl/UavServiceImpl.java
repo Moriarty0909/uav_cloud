@@ -36,7 +36,6 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int saveUav(Uav uav, Long userId) {
-//        uav.setDeleted(1);
         int result = uavDao.insert(uav);
         UserUav userUav = new UserUav();
         userUav.setUavId(uav.getId());
