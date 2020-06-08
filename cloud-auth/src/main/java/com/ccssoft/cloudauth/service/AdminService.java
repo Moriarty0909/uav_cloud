@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 远程调用有关用户管理模块的服务
  * @author moriarty
  * @date 2020/5/26 15:49
  */
