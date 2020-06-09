@@ -1,7 +1,7 @@
 package com.ccssoft.cloudauth.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ccssoft.cloudauth.entity.User;
+import com.ccssoft.cloudcommon.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

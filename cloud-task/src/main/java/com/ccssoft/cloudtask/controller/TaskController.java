@@ -130,6 +130,7 @@ public class TaskController {
      * 分页获取对应用户所有飞机计划数据
      * @param current 当前页数
      * @param size 每页数量
+     * @param userId 用户id
      * @return R
      */
     @GetMapping("/getTaskByUserId4Page/{current}&{size}&{userId}")

@@ -1,6 +1,7 @@
 package com.ccssoft.cloudauth.entity;
 
 import com.ccssoft.cloudauth.dao.RoleDao;
+import com.ccssoft.cloudcommon.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

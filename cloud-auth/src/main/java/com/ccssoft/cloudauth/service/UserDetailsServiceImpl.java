@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudauth.dao.RoleDao;
 import com.ccssoft.cloudauth.dao.UserDao;
 import com.ccssoft.cloudauth.entity.JwtUser;
-import com.ccssoft.cloudauth.entity.User;
+import com.ccssoft.cloudcommon.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

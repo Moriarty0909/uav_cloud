@@ -30,7 +30,7 @@ public class AirspaceController {
     /**
      * 注册空域
      * @param airspace 空域详细信息
-     * @return
+     * @return R
      */
     @PostMapping("/registerAS")
     public R registerAirSpace (@Valid @RequestBody Airspace airspace) {
@@ -62,11 +62,13 @@ public class AirspaceController {
 
     /**
      * 获取所有待审批的空域
+     * @param current 当前页数
+     * @param size 每页数据量
      * @return R
      */
-    @GetMapping("/getAllAirspaceNotAllow/{current}&{siz}")
-    public R getAllAirspaceNotAllow (@PathVariable("current") int current, @PathVariable("current") int size) {
-        log.info("AirspaceController.getAllAirspaceNotAllow(),参数：当前页数={},每页数量=",current,size);
+    @GetMapping("/getAllAirspaceNotAllow/{current}&{size}")
+    public R getAllAirspaceNotAllow (@PathVariable("current") int current, @PathVariable("size") int size) {
+        log.info("AirspaceController.getAllAirspaceNotAllow(),参数：当前页数={},每页数量={}",current,size);
         return R.ok(airspaceService.getAllAirspaceNotAllow(current,size));
     }
 
@@ -75,17 +77,17 @@ public class AirspaceController {
      * 批量查询符合条件的所有空域
      * @param userId 用户id
      * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内
-     * @return
+     * @return R
      */
     @GetMapping("/getASByUserId/{id}&{time}")
-    public R getASByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date) {
+    public R getAirspaceByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date) {
         log.info("AirspaceController.getASByUserId(),参数={},{}",userId,date);
         if (date != null) {
             List<Airspace> asByUserIdPremiseTime = airspaceService.getAirspaceByUserIdPremiseTime(userId, date);
 
             return ObjectUtil.length(asByUserIdPremiseTime) != 0 ? R.ok(asByUserIdPremiseTime) : R.error(301,"无查询数据！");
         } else {
-            List list = airspaceService.getAirspaceByUserId(userId);
+            List<Airspace> list = airspaceService.getAirspaceByUserId(userId);
             return ObjectUtil.length(list) != 0 ? R.ok(list) : R.error(301, "无查询数据！");
         }
     }
@@ -93,7 +95,7 @@ public class AirspaceController {
     /**
      * 单个获取符合空域id的空域信息
      * @param airspaceId 空域id
-     * @return
+     * @return R
      */
     @GetMapping("/getAirspaceByAirspaceId/{id}")
     public R getAirspaceByAirspaceId (@PathVariable("id") Long airspaceId) {

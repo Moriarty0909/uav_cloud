@@ -51,11 +51,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()//关闭跨域防护
 
                 .authorizeRequests()//开启认证请求
-//                .antMatchers("/tasks/**").authenticated()
-//                .antMatchers("/auth/test").authenticated()
-                // 其他都放行了
+//
+                // 登录相关放行
                 .antMatchers("/consumer/admin/login").permitAll()
                 .antMatchers("/consumer/admin/authenticate").permitAll()
+                //限制好各功能模块
+                .antMatchers("/consumer/admin/deleteUser/**").hasRole("ADMIN")
+//                .antMatchers("/consumer/**").authenticated()
 //                .antMatchers(HttpMethod.DELETE, "/tasks/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
