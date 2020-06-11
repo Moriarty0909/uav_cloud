@@ -80,7 +80,6 @@ public class AirspaceController {
      */
     @GetMapping("/getASByUserId/{id}")
     public R getAirspaceByUserId (@PathVariable("id") Long userId) {
-
         log.info("AirspaceController.getASByUserId(),参数={}。",userId);
         List<Airspace> list = airspaceService.getAirspaceByUserId(userId);
         return ObjectUtil.length(list) != 0 ? R.ok(list) : R.error(301, "无查询数据！");

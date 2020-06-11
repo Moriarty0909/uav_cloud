@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONObjectIter;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -75,13 +76,10 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     @Override
     public List<Airspace> getAirspaceByUserId(Long userId) {
         List list = getAirspaceIdsByUserId(userId);
-        List<Airspace> airspaceListByIdList = airspaceDao.getAirspaceListByIdList(list);
 
-        if (redisUtil.get("asbyuserid"+userId) == null) {
-
-            if (airspaceListByIdList != null) {
-                redisUtil.set("airspace"+userId,airspaceListByIdList,6000);
-            }
+        if (redisUtil.get(String.valueOf(userId)) == null) {
+            List<Airspace> airspaceListByIdList = airspaceDao.getAirspaceListByIdList(list);
+            redisUtil.set(String.valueOf(userId),airspaceListByIdList,6000);
             return airspaceListByIdList;
         }
 
@@ -131,18 +129,22 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         return airspaceDao.updateInfo(airspace);
     }
 
-    private List getAirspaceIdsByUserId (Long userId) {
-        QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
-        wrapper.eq("user_id",userId);
-        List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
-        if (ObjectUtil.length(userAirspaces) == 0) {
+    private List<Long> getAirspaceIdsByUserId (Long userId) {
+        //在默认不删表的情况下，查到这个就也能表明对应的另一张表也是会有对应的数据的,后续的工作就可以直接进行
+        if (!bloomFilter.isExist(String.valueOf(userId)) ) {
             return null;
         }
 
-        List list = new ArrayList();
+        QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
+        wrapper.eq("user_id",userId);
+        List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
+
+        List<Long> list = new ArrayList();
         for (UserAirspace userAirspace : userAirspaces) {
             list.add(userAirspace.getAirspaceId());
         }
+        redisUtil.set(String.valueOf(userId),list);
         return list;
+
     }
 }

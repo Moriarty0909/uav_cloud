@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/admin")
 @Slf4j
-public class AuthController {
+public class AdminController {
     @Resource
     private UserService userService;
 
