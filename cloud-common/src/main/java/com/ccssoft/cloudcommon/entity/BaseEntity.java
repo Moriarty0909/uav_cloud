@@ -19,7 +19,7 @@ import java.util.Date;
 public class BaseEntity implements Serializable {
     private static final long serialVersionUID = -6507594581709611025L;
 
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ID_WORKER)
     public Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

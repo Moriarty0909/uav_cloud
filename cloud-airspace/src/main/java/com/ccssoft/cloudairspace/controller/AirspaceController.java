@@ -74,22 +74,30 @@ public class AirspaceController {
 
 
     /**
+     * 批量查询符合条件的所有空域，直接查出和此用户相关的空域
+     * @param userId 用户id
+     * @return R
+     */
+    @GetMapping("/getASByUserId/{id}")
+    public R getAirspaceByUserId (@PathVariable("id") Long userId) {
+
+        log.info("AirspaceController.getASByUserId(),参数={}。",userId);
+        List<Airspace> list = airspaceService.getAirspaceByUserId(userId);
+        return ObjectUtil.length(list) != 0 ? R.ok(list) : R.error(301, "无查询数据！");
+    }
+
+    /**
      * 批量查询符合条件的所有空域
      * @param userId 用户id
-     * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内
+     * @param date 查出和此用户相关的空域并且还需要比对是否在空域使用时间的起始范围内
      * @return R
      */
     @GetMapping("/getASByUserId/{id}&{time}")
     public R getAirspaceByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date) {
-        log.info("AirspaceController.getASByUserId(),参数={},{}",userId,date);
-        if (date != null) {
-            List<Airspace> asByUserIdPremiseTime = airspaceService.getAirspaceByUserIdPremiseTime(userId, date);
 
-            return ObjectUtil.length(asByUserIdPremiseTime) != 0 ? R.ok(asByUserIdPremiseTime) : R.error(301,"无查询数据！");
-        } else {
-            List<Airspace> list = airspaceService.getAirspaceByUserId(userId);
-            return ObjectUtil.length(list) != 0 ? R.ok(list) : R.error(301, "无查询数据！");
-        }
+        log.info("AirspaceController.getASByUserId(),参数={},{}",userId,date);
+        List<Airspace> asByUserIdPremiseTime = airspaceService.getAirspaceByUserIdPremiseTime(userId, date);
+        return ObjectUtil.length(asByUserIdPremiseTime) != 0 ? R.ok(asByUserIdPremiseTime) : R.error(301,"无查询数据！");
     }
 
     /**

@@ -55,8 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 登录相关放行
                 .antMatchers("/consumer/admin/login").permitAll()
                 .antMatchers("/consumer/admin/authenticate").permitAll()
+                .antMatchers("/consumer/admin/registerUser").permitAll()
                 //限制好各功能模块
                 .antMatchers("/consumer/admin/deleteUser/**").hasRole("ADMIN")
+                .antMatchers("/consumer/airspace/approvalAirspace/**").hasRole("ADMIN")
+                .antMatchers("/consumer/task/approvalTask/**").hasRole("ADMIN")
+
 //                .antMatchers("/consumer/**").authenticated()
 //                .antMatchers(HttpMethod.DELETE, "/tasks/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()

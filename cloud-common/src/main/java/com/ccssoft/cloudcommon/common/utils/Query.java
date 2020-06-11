@@ -3,15 +3,15 @@ package com.ccssoft.cloudcommon.common.utils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ccssoft.cloudcommon.common.xss.SQLFilter;
 import org.apache.commons.lang.StringUtils;
-import top.codermoriarty.common.xss.SQLFilter;
 
 import java.util.Map;
 
 /**
  * 查询参数
  *
- * @author Mark sunlightcs@gmail.com
+ * @author
  */
 public class Query<T> {
 

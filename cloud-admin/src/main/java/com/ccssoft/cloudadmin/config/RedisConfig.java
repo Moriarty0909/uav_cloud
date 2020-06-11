@@ -1,4 +1,4 @@
-package com.ccssoft.cloudcommon.common.utils.redis.config;
+package com.ccssoft.cloudadmin.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

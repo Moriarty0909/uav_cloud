@@ -17,7 +17,7 @@ import javax.validation.Valid;
  * @date 2020/5/20 09:50
  */
 @Controller
-@RequestMapping("/auth")
+@RequestMapping("/admin")
 @Slf4j
 public class AuthController {
     @Resource

@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @FeignClient(value = "admin-server")//调用哪个微服务
 public interface AdminService {
 
-    @GetMapping("/auth/login")
+    @GetMapping("/admin/login")
     String login();
 
     /**
@@ -25,7 +25,7 @@ public interface AdminService {
      * @param user 需注册的用户详情
      * @return 成功与否
      */
-    @PostMapping("/auth/register")
+    @PostMapping("/admin/register")
     R registerUser(@Valid @RequestBody User user);
 
     /**
@@ -33,7 +33,7 @@ public interface AdminService {
      * @param user 带有新密码的用户详情
      * @return 成功与否
      */
-    @PostMapping("/auth/changePassword")
+    @PostMapping("/admin/changePassword")
     R changePassword (@Valid @RequestBody User user);
 
     /**
@@ -41,7 +41,7 @@ public interface AdminService {
      * @param user 修改用户信息详情
      * @return 成功与否
      */
-    @PostMapping("/auth/updateInfo")
+    @PostMapping("/admin/updateInfo")
     R updateInfo (@Valid @RequestBody User user);
 
     /**
@@ -49,7 +49,7 @@ public interface AdminService {
      * @param id 用户id
      * @return 成功与否
      */
-    @GetMapping("/auth/deleteUser/{id}")
+    @GetMapping("/admin/deleteUser/{id}")
     R delUser (@PathVariable("id") Long id);
 
     /**
@@ -57,7 +57,7 @@ public interface AdminService {
      * @param username 用户名
      * @return 用户信息详情
      */
-    @GetMapping("/auth/getUser/{username}")
+    @GetMapping("/admin/getUser/{username}")
     R getInfo(@PathVariable("username") String username);
 
     /**
@@ -66,6 +66,6 @@ public interface AdminService {
      * @param size 每页数据量
      * @return 分页数据
      */
-    @GetMapping("/auth/getUser4Page/{current}&{size}")
+    @GetMapping("/admin/getUser4Page/{current}&{size}")
     R getUser4Page(@PathVariable("current") int current, @PathVariable("size") int size);
 }

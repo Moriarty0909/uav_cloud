@@ -1,16 +1,12 @@
 package com.ccssoft.cloudauth.service;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Airspace;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 远程调用有关空域管理模块的服务
@@ -57,7 +53,7 @@ public interface AirspaceService {
     /**
      * 远程调用有关空域管理模块的批量查询符合条件的所有空域功能
      * @param userId 用户id
-     * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内
+     * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内，直接传Date或null
      * @return R
      */
     @GetMapping("/airspace/getASByUserId/{id}&{time}")

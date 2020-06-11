@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 
 /**
- * @author lizhengyu
+ * @author moriarty
  */
 public class JwtTokenUtils {
 

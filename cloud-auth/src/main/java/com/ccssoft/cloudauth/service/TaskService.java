@@ -72,7 +72,7 @@ public interface TaskService {
     R getAllTask4Page (@PathVariable("current") int current, @PathVariable("size") int size);
 
     /**
-     * 远程调用飞行计划模块的分页获取对应用户所有飞机计划数据功能
+     * 远程调用飞行计划模块的分页获取对应该用户的所有飞机计划数据功能
      * @param current 当前页数
      * @param size 每页数量
      * @param userId 用户id
