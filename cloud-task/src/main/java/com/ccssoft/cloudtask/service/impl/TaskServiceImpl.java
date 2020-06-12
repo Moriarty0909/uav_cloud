@@ -1,13 +1,18 @@
 package com.ccssoft.cloudtask.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudtask.dao.TaskAirspaceDao;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudtask.dao.TaskDao;
 import com.ccssoft.cloudtask.entity.TaskAirspace;
+import com.ccssoft.cloudtask.filter.RedisBloomFilter;
 import com.ccssoft.cloudtask.service.TaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ccssoft.cloudtask.util.RedisUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -30,6 +35,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
     @Resource
     private TaskAirspaceDao taskAirspaceDao;
 
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private RedisBloomFilter bloomFilter;
 
     @Override
     @Transactional(rollbackFor=Exception.class)
@@ -41,15 +51,26 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
     }
 
     @Override
-    public ArrayList getAirspaceByTaskId(Long taskId) {
-        QueryWrapper<TaskAirspace> wrapper = new QueryWrapper();
-        wrapper.eq("task_id",taskId);
-        ArrayList<Long> list = new ArrayList();
-        for (TaskAirspace taskAirspace : taskAirspaceDao.selectList(wrapper)) {
-            list.add(taskAirspace.getAirspaceId());
+    public ArrayList getAirspaceIdByTaskId(Long taskId) {
+        String numId = String.valueOf(taskId);
+        if (!bloomFilter.isExist(numId)) {
+            return null;
         }
 
-        return list;
+        if (redisUtil.get(numId) == null) {
+            QueryWrapper<TaskAirspace> wrapper = new QueryWrapper();
+            wrapper.eq("task_id",taskId);
+            ArrayList<Long> list = new ArrayList();
+            for (TaskAirspace taskAirspace : taskAirspaceDao.selectList(wrapper)) {
+                list.add(taskAirspace.getAirspaceId());
+            }
+            redisUtil.set(numId,list);
+            return list;
+        }
+
+        JSON parse = JSONUtil.parse(redisUtil.get(numId));
+        return parse.toBean(ArrayList.class);
+
     }
 
     @Override

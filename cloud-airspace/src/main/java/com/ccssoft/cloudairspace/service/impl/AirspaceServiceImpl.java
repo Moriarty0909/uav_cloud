@@ -4,7 +4,6 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONObjectIter;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -90,22 +89,24 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, Date date) {
+        //TODO 思考下怎么复用好
         List list = getAirspaceIdsByUserId(userId);
         return airspaceDao.getAirspaceListByIdListAndTime(list,date);
     }
 
     @Override
     public Airspace getAirspaceByAirspaceId(Long airspaceId) {
-        if(!bloomFilter.isExist(String.valueOf(airspaceId))){
+        String numId = String.valueOf(airspaceId);
+        if(!bloomFilter.isExist(numId)){
             return null;
         }
 
-        if (redisUtil.get(String.valueOf(airspaceId)) == null) {
+        if (redisUtil.get(numId) == null) {
             Airspace as = airspaceDao.getAirspaceByAirspaceId(airspaceId);
-            redisUtil.set(""+airspaceId,as,6000);
+            redisUtil.set(numId,as,6000);
         }
 
-        JSONObject obj = JSONUtil.parseObj(redisUtil.get(""+airspaceId));
+        JSONObject obj = JSONUtil.parseObj(redisUtil.get(numId));
         return obj.toBean(Airspace.class);
     }
 
@@ -119,8 +120,33 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     }
 
     @Override
-    public List<Airspace> getAirspaceByAirspaceIds(List AirspaceId) {
-        return airspaceDao.getAirspaceByAirspaceIds(AirspaceId);
+    public List<Airspace> getAirspaceByAirspaceIds(List<Long> airspaceIds) {
+        List<Airspace> list = new ArrayList<>();
+        for (Long airspaceId : airspaceIds) {
+            String numId = String.valueOf(airspaceId);
+            if (!bloomFilter.isExist(numId)) {
+                return null;
+            }
+
+            Airspace airspace = JSONUtil.parseObj(redisUtil.get(numId)).toBean(Airspace.class);
+            if (airspace != null) {
+                list.add(airspace);
+                airspaceIds.remove(airspaceId);
+            }
+        }
+        //全部在缓存中找到
+        if (airspaceIds.size() == 0) {
+            return list;
+        }
+
+        //添加进缓存，组装后返回
+        List<Airspace> airspaceList = airspaceDao.getAirspaceByAirspaceIds(airspaceIds);
+        for (Airspace airspace : airspaceList) {
+            list.add(airspace);
+            redisUtil.set(String.valueOf(airspace.getId()),airspace);
+        }
+
+        return list;
     }
 
     @Override
@@ -130,21 +156,26 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     }
 
     private List<Long> getAirspaceIdsByUserId (Long userId) {
+        String numId = String.valueOf(userId);
         //在默认不删表的情况下，查到这个就也能表明对应的另一张表也是会有对应的数据的,后续的工作就可以直接进行
-        if (!bloomFilter.isExist(String.valueOf(userId)) ) {
+        if (!bloomFilter.isExist(numId) ) {
             return null;
         }
 
-        QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
-        wrapper.eq("user_id",userId);
-        List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
+        if (redisUtil.get(numId) == null) {
+            QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
+            wrapper.eq("user_id",userId);
+            List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
 
-        List<Long> list = new ArrayList();
-        for (UserAirspace userAirspace : userAirspaces) {
-            list.add(userAirspace.getAirspaceId());
+            List<Long> list = new ArrayList();
+            for (UserAirspace userAirspace : userAirspaces) {
+                list.add(userAirspace.getAirspaceId());
+            }
+            redisUtil.set(numId,list);
+            return list;
         }
-        redisUtil.set(String.valueOf(userId),list);
-        return list;
 
+        JSONObject obj = JSONUtil.parseObj(redisUtil.get(numId));
+        return obj.toBean(List.class);
     }
 }

@@ -65,7 +65,7 @@ public interface AirspaceService extends IService<Airspace> {
      * @param AirspaceIdlist 一组空域id
      * @return 一组空域详情
      */
-    List<Airspace> getAirspaceByAirspaceIds(List AirspaceIdlist);
+    List<Airspace> getAirspaceByAirspaceIds(List<Long> AirspaceIdlist);
 
     /**
      * 修改空域id，并在每次修改之后需要把批准状态置换为未批准

@@ -13,7 +13,7 @@ spring:
     port: 6379
     host: 183.56.219.211
     timeout: 30000
-    database: 0
+    database: 2
     jedis:
       pool:
         min-idle: 10000
@@ -38,3 +38,8 @@ mybatis-plus:
 
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #默认的控制台输出
+
+bloom:
+  filter:
+    expectedInsertions: 1000
+    fpp: 0.001F

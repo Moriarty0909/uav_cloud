@@ -66,7 +66,7 @@ public class AdminController {
     }
 
     /**
-     * 获取所有的用户分页信息
+     * 获取所有游客的用户分页信息
      * @param current 当前页数
      * @param size 每页数据量
      * @return 分页数据
@@ -75,6 +75,7 @@ public class AdminController {
     @ResponseBody
     public R getUser4Page(@PathVariable("current") int current, @PathVariable("size") int size){
         log.info("进入AuthController.getUserByPage(),参数={}",current+","+size);
+        //TODO 记得回来修改条件，应该是需要获取游客的信息
         Page page = userService.getUserByPage(current,size);
         return R.ok(page);
     }

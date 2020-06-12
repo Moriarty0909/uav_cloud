@@ -1,5 +1,7 @@
 package com.ccssoft.clouduav.service.impl;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.entity.Uav;
@@ -8,6 +10,7 @@ import com.ccssoft.clouduav.dao.UavDao;
 import com.ccssoft.clouduav.entity.UserUav;
 import com.ccssoft.clouduav.service.UavService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ccssoft.clouduav.util.RedisUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
     @Resource
     private UserUavDao userUavDao;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int saveUav(Uav uav, Long userId) {
@@ -47,17 +53,24 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
 
     @Override
     public Page getUav4Page(int current, int size) {
-        Page<Uav> page = new Page<>(current,size);
-        uavDao.selectPage(page,null);
-        return page;
+        if (redisUtil.get(""+current+size) == null) {
+            Page<Uav> page = new Page<>(current,size);
+            uavDao.selectPage(page,null);
+            redisUtil.set(""+current+size,page);
+            return page;
+        }
+
+        JSONObject obj = JSONUtil.parseObj(redisUtil.get(""+current+size));
+        return obj.toBean(Page.class);
     }
 
     @Override
-    public Page getUavByUserId4Page(int current, int size, Long id) {
+    public Page getUavByUserId4Page(int current, int size, Long userId) {
+
         Page<Uav> page = new Page<>(current,size);
         QueryWrapper<Uav> wrapperUav = new QueryWrapper();
         QueryWrapper<UserUav> wrapperRelation = new QueryWrapper();
-        wrapperRelation.eq("user_id",id);
+        wrapperRelation.eq("user_id",userId);
         List<UserUav> userUavs = userUavDao.selectList(wrapperRelation);
         if (userUavs == null) {
             return null;

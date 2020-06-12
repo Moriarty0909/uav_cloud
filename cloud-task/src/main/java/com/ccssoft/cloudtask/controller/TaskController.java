@@ -2,16 +2,19 @@ package com.ccssoft.cloudtask.controller;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Airspace;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudcommon.entity.Uav;
+import com.ccssoft.cloudtask.entity.TaskNatrue;
 import com.ccssoft.cloudtask.service.AirspaceService;
 import com.ccssoft.cloudtask.service.TaskNatrueService;
 import com.ccssoft.cloudtask.service.TaskService;
 import com.ccssoft.cloudtask.service.UavService;
+import com.ccssoft.cloudtask.util.RedisUtil;
 import com.ccssoft.cloudtask.vo.TaskVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +57,9 @@ public class TaskController {
 
     @Resource
     private TaskNatrueService taskNatrueService;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     //TODO 是否需要一个判断飞机飞行中返回时间是否有在任意计划内的告警提示
 
@@ -109,8 +116,13 @@ public class TaskController {
     @GetMapping("/getAirspaceByTaskId/{id}")
     public R getAirspaceByTaskId (@PathVariable("id") Long taskId) {
         log.info("TaskController.createPlan(),参数:taskId={}",taskId);
+
+        ArrayList airspaceIdByTaskId = taskService.getAirspaceIdByTaskId(taskId);
+        if (airspaceIdByTaskId == null) {
+            return R.error(301,"taskId不存在！");
+        }
         //调用远程服务
-        List list = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceByTaskId(taskId));
+        List list = airspaceService.getAirspaceByAirspaceIds(airspaceIdByTaskId);
         return ObjectUtil.length(list) > 0 ? R.ok(list) : R.error(301,"无此查询数据！");
     }
 
@@ -159,7 +171,8 @@ public class TaskController {
             TaskVo taskVo = new TaskVo();
             BeanUtils.copyProperties(task,taskVo);
             //获取空域的名称
-            List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceByTaskId(task.getId()));
+
+            List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceIdByTaskId(task.getId()));
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
                 Console.log(airspace);
@@ -170,7 +183,14 @@ public class TaskController {
             Uav uav = uavService.getUavById(task.getUavId());
             taskVo.setUavName(uav.getNickname());
             //获取用途的名称
-            taskVo.setNatrueName(taskNatrueService.getById(task.getTaskNatureId()).getTaskNatrueName());
+            String taskNatureId = String.valueOf(task.getTaskNatureId());
+            if (redisUtil.get(taskNatureId) == null) {
+                TaskNatrue taskNatrue = taskNatrueService.getById(task.getTaskNatureId());
+                redisUtil.set(taskNatureId,taskNatrue);
+                taskVo.setNatrueName(taskNatrue.getTaskNatrueName());
+            } else {
+                taskVo.setNatrueName(JSONUtil.parse(redisUtil.get(taskNatureId)).toBean(TaskNatrue.class).getTaskNatrueName());
+            }
 
             list.add(taskVo);
         }

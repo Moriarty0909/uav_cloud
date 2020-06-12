@@ -1,4 +1,4 @@
-package com.ccssoft.cloudcommon.common.utils;
+package com.ccssoft.cloudtask.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

@@ -26,7 +26,7 @@ public interface TaskService extends IService<Task> {
      * @param taskId 飞行计划id
      * @return 一组对应的空域id
      */
-    ArrayList getAirspaceByTaskId(Long taskId);
+    ArrayList getAirspaceIdByTaskId(Long taskId);
 
     /**
      * 批准飞机计划
