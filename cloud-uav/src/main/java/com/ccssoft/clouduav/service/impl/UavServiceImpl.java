@@ -8,6 +8,7 @@ import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.clouduav.dao.UserUavDao;
 import com.ccssoft.clouduav.dao.UavDao;
 import com.ccssoft.clouduav.entity.UserUav;
+import com.ccssoft.clouduav.filter.RedisBloomFilter;
 import com.ccssoft.clouduav.service.UavService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ccssoft.clouduav.util.RedisUtil;
@@ -39,6 +40,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
     @Resource
     private RedisUtil redisUtil;
 
+    @Resource
+    private RedisBloomFilter bloomFilter;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int saveUav(Uav uav, Long userId) {
@@ -66,22 +70,34 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
 
     @Override
     public Page getUavByUserId4Page(int current, int size, Long userId) {
-
-        Page<Uav> page = new Page<>(current,size);
-        QueryWrapper<Uav> wrapperUav = new QueryWrapper();
-        QueryWrapper<UserUav> wrapperRelation = new QueryWrapper();
-        wrapperRelation.eq("user_id",userId);
-        List<UserUav> userUavs = userUavDao.selectList(wrapperRelation);
-        if (userUavs == null) {
+        String numId = String.valueOf(userId);
+        if (!bloomFilter.isExist(numId)) {
             return null;
         }
-        Collection<Long> collection = new ArrayList<>();
-        for (UserUav userUav : userUavs) {
-            collection.add(userUav.getUavId());
+
+        if (redisUtil.get(numId+current+size) == null) {
+            Page<Uav> page = new Page<>(current,size);
+            QueryWrapper<Uav> wrapperUav = new QueryWrapper();
+            QueryWrapper<UserUav> wrapperRelation = new QueryWrapper();
+            wrapperRelation.eq("user_id",userId);
+            List<UserUav> userUavs = userUavDao.selectList(wrapperRelation);
+            if (userUavs == null) {
+                return null;
+            }
+            Collection<Long> collection = new ArrayList<>();
+            for (UserUav userUav : userUavs) {
+                collection.add(userUav.getUavId());
+            }
+            wrapperUav.in("id",collection);
+            uavDao.selectPage(page,wrapperUav);
+
+            redisUtil.set(numId+current+size,page);
+            return page;
         }
-        wrapperUav.in("id",collection);
-        uavDao.selectPage(page,wrapperUav);
-        return page;
+
+        JSONObject obj = JSONUtil.parseObj(redisUtil.get(numId+current+size));
+        return obj.toBean(Page.class);
+
     }
 
 }

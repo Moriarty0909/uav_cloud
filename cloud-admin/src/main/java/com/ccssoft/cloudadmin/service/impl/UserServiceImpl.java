@@ -58,7 +58,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         //TODO 先这么存，后续再优化
         if (redisUtil.get(""+current+size) == null) {
             Page<User> page = new Page<>(current,size);
-            userDao.selectPage(page,null);
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.eq("role_id",2);
+            userDao.selectPage(page,wrapper);
             redisUtil.set(""+current+size,page,6000);
             return page;
         }

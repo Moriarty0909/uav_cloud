@@ -53,11 +53,19 @@ public interface AirspaceService {
     /**
      * 远程调用有关空域管理模块的批量查询符合条件的所有空域功能
      * @param userId 用户id
-     * @param date 如果时间为null就直接查出和此用户相关的空域，如果有时间时，还需要比对是否在空域的起始范围内，直接传Date或null
+     * @param date 需要比对计划时间是否在空域的起始范围内，直接传Date或null
      * @return R
      */
     @GetMapping("/airspace/getASByUserId/{id}&{time}")
     R getAirspaceByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date);
+
+    /**
+     * 远程调用有关空域管理模块的批量查询符合条件的所有空域功能
+     * @param userId 用户id
+     * @return R
+     */
+    @GetMapping("/airspace/getASByUserId/{id}")
+    R getAirspaceByUserId (@PathVariable("id") Long userId);
 
     /**
      * 远程调用有关空域管理模块的单个获取符合空域id的空域信息功能

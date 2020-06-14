@@ -10,6 +10,7 @@ import com.ccssoft.cloudcommon.entity.Airspace;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.cloudtask.entity.TaskNatrue;
+import com.ccssoft.cloudtask.filter.RedisBloomFilter;
 import com.ccssoft.cloudtask.service.AirspaceService;
 import com.ccssoft.cloudtask.service.TaskNatrueService;
 import com.ccssoft.cloudtask.service.TaskService;
@@ -61,6 +62,9 @@ public class TaskController {
     @Resource
     private RedisUtil redisUtil;
 
+    @Resource
+    private RedisBloomFilter bloomFilter;
+
     //TODO 是否需要一个判断飞机飞行中返回时间是否有在任意计划内的告警提示
 
     /**
@@ -70,9 +74,14 @@ public class TaskController {
      */
     @PostMapping("/createPlan")
     public R createPlan (@Valid @RequestBody Task task) {
+
         log.info("TaskController.createPlan(),参数={}",task);
         int result = taskService.createPlan(task);
-        return result == 1 ? R.ok() : R.error(301,"关系列表创建失败！id="+result);
+        if (result == 1) {
+            bloomFilter.put(String.valueOf(task.getId()));
+            return R.ok();
+        }
+        return R.error(301,"关系列表创建失败！id="+result) ;
     }
 
     /**
@@ -150,7 +159,7 @@ public class TaskController {
         log.info("TaskController.getAllTask4Page(),参数:当前页数={}，一页{}个数据.",current,size);
         //获取user对应的task
         List<Long> uavIds = uavService.getUavIdByUserId(userId);
-        return R.ok(getTheVoPage(current,size,uavIds));
+        return uavIds != null ? R.ok(getTheVoPage(current,size,uavIds)) : R.error(301,"此用户id下没有对应的无人机");
     }
 
 
@@ -171,7 +180,6 @@ public class TaskController {
             TaskVo taskVo = new TaskVo();
             BeanUtils.copyProperties(task,taskVo);
             //获取空域的名称
-
             List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceIdByTaskId(task.getId()));
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
@@ -180,8 +188,10 @@ public class TaskController {
             }
             taskVo.setAirspaceName(nameList);
             //获取无人机的名称
+            //TODO 这里应该也可以加上缓存
             Uav uav = uavService.getUavById(task.getUavId());
             taskVo.setUavName(uav.getNickname());
+
             //获取用途的名称
             String taskNatureId = String.valueOf(task.getTaskNatureId());
             if (redisUtil.get(taskNatureId) == null) {

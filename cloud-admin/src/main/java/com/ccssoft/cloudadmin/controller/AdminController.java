@@ -75,7 +75,6 @@ public class AdminController {
     @ResponseBody
     public R getUser4Page(@PathVariable("current") int current, @PathVariable("size") int size){
         log.info("进入AuthController.getUserByPage(),参数={}",current+","+size);
-        //TODO 记得回来修改条件，应该是需要获取游客的信息
         Page page = userService.getUserByPage(current,size);
         return R.ok(page);
     }

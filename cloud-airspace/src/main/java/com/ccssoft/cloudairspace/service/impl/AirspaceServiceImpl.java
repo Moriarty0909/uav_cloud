@@ -110,8 +110,10 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         return obj.toBean(Airspace.class);
     }
 
+
     @Override
     public Page<Airspace> getAllAirspaceNotAllow(int current, int size) {
+        //主要作为管理者使用，并发量应该不会很高？
         Page<Airspace> page = new Page<>(current,size);
         QueryWrapper<Airspace> wrapper = new QueryWrapper();
         wrapper.eq("status",0);

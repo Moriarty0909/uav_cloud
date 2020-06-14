@@ -33,6 +33,7 @@ public class RedisDataInit {
         for (Uav uav : uavs) {
             redisBloomFilter.put(String.valueOf(uav.getId()));
         }
+
         QueryWrapper<UserUav> wrapper = new QueryWrapper<>();
         wrapper.select("distinct user_id");
         List<UserUav> userUavs = userUavDao.selectList(wrapper);

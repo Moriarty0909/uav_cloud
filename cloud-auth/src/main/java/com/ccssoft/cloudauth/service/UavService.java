@@ -58,4 +58,12 @@ public interface UavService {
      */
     @GetMapping("/uav/deleteUavById/{id}")
     R deleteUavById (@PathVariable("id") Long uavId);
+
+    /**
+     * 远程调用无人机模块的删除无人机功能
+     * @param uavId 无人机id
+     * @return 是否成功
+     */
+    @GetMapping("/getUavById/{id}")
+    Uav getUavById (@PathVariable("id") Long uavId);
 }

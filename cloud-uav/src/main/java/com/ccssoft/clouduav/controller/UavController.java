@@ -1,12 +1,15 @@
 package com.ccssoft.clouduav.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Uav;
 import com.ccssoft.clouduav.entity.UserUav;
+import com.ccssoft.clouduav.filter.RedisBloomFilter;
 import com.ccssoft.clouduav.service.UavService;
 import com.ccssoft.clouduav.service.UserUavService;
+import com.ccssoft.clouduav.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -30,6 +33,10 @@ public class UavController {
     private UavService uavService;
     @Resource
     private UserUavService userUavService;
+    @Resource
+    private RedisBloomFilter bloomFilter;
+    @Resource
+    private RedisUtil redisUtil;
 
     /**
      * 注册无人机
@@ -90,7 +97,6 @@ public class UavController {
         return uavService.removeById(uavId) ? R.ok() : R.error(300,"删除失败！");
     }
 
-
     /**
      * 根据UserId来获取对应的关系列表中的UavId，供远程服务调用
      * @param userId 用户id
@@ -99,13 +105,23 @@ public class UavController {
     @GetMapping("/getUavByUserId")
     public List<Long> getUavIdByUserId (@RequestParam("userId") Long userId) {
         log.info("UavController.getUavByUserId(),参数:userId={}",userId);
-        QueryWrapper<UserUav> wrapper = new QueryWrapper();
-        wrapper.eq("user_id",userId);
-        List<Long> list = new ArrayList();
-        for (UserUav userUav : userUavService.list(wrapper)) {
-            list.add(userUav.getUavId());
+        String numId = String.valueOf(userId);
+        if (!bloomFilter.isExist(numId)) {
+           return null;
         }
-        return list;
+        if (redisUtil.get(numId) == null) {
+            QueryWrapper<UserUav> wrapper = new QueryWrapper();
+            wrapper.eq("user_id",userId);
+            List<Long> list = new ArrayList();
+            for (UserUav userUav : userUavService.list(wrapper)) {
+                list.add(userUav.getUavId());
+            }
+            redisUtil.set(numId,list);
+            return list;
+        }
+
+        return JSONUtil.parse(redisUtil.get(numId)).toBean(List.class);
+
     }
 
     /**
@@ -116,7 +132,18 @@ public class UavController {
     @GetMapping("/getUavById/{id}")
     public Uav getUavById (@PathVariable("id") Long uavId) {
         log.info("UavController.getUavById(),参数:uavId={}",uavId);
-        return uavService.getById(uavId);
+        String numId = String.valueOf(uavId);
+        if (!bloomFilter.isExist(numId)) {
+            return null;
+        }
+
+        if (redisUtil.get(numId) == null) {
+            Uav uav = uavService.getById(uavId);
+            redisUtil.set(numId,uav);
+            return uav;
+        }
+
+        return JSONUtil.parse(redisUtil.get(numId)).toBean(Uav.class);
     }
 }
 

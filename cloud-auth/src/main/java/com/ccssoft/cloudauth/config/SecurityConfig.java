@@ -53,6 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()//开启认证请求
 //
                 // 登录相关放行
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/consumer/admin/login").permitAll()
                 .antMatchers("/consumer/admin/authenticate").permitAll()
                 .antMatchers("/consumer/admin/registerUser").permitAll()
@@ -61,9 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/consumer/airspace/approvalAirspace/**").hasRole("ADMIN")
                 .antMatchers("/consumer/task/approvalTask/**").hasRole("ADMIN")
 
-//                .antMatchers("/consumer/**").authenticated()
+                .antMatchers("/consumer/**").authenticated()
 //                .antMatchers(HttpMethod.DELETE, "/tasks/**").hasAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
