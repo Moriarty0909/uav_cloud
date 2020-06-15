@@ -47,6 +47,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
     @Transactional(rollbackFor = Exception.class)
     public int saveUav(Uav uav, Long userId) {
         int result = uavDao.insert(uav);
+
+        bloomFilter.put(String.valueOf(uav.getId()));
+
         UserUav userUav = new UserUav();
         userUav.setUavId(uav.getId());
         userUav.setUserId(userId);

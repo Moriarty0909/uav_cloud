@@ -31,10 +31,13 @@ import java.util.List;
 public class UavController {
     @Resource
     private UavService uavService;
+
     @Resource
     private UserUavService userUavService;
+
     @Resource
     private RedisBloomFilter bloomFilter;
+
     @Resource
     private RedisUtil redisUtil;
 

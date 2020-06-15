@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -68,4 +69,13 @@ public interface AdminService {
      */
     @GetMapping("/admin/getUser4Page/{current}&{size}")
     R getUser4Page(@PathVariable("current") int current, @PathVariable("size") int size);
+
+    /**
+     * 获取验证码
+     * @param response http请求
+     * @return 分页数据
+     */
+    @GetMapping("/admin/verificationCode")
+    @ResponseBody
+    R getVerificationCode (HttpServletResponse response);
 }

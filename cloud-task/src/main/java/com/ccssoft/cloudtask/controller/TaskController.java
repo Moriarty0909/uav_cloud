@@ -77,11 +77,7 @@ public class TaskController {
 
         log.info("TaskController.createPlan(),参数={}",task);
         int result = taskService.createPlan(task);
-        if (result == 1) {
-            bloomFilter.put(String.valueOf(task.getId()));
-            return R.ok();
-        }
-        return R.error(301,"关系列表创建失败！id="+result) ;
+        return result == 1 ? R.ok() : R.error(301,"关系列表创建失败！id="+result) ;
     }
 
     /**

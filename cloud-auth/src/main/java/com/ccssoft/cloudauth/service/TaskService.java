@@ -1,6 +1,5 @@
 package com.ccssoft.cloudauth.service;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Task;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 远程调用有关飞行计划管理模块的服务

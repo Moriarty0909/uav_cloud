@@ -46,6 +46,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
     public int createPlan(Task task) {
         int result = taskDao.insert(task);
 
+        bloomFilter.put(String.valueOf(task.getId()));
+
         List<Long> list = task.getAirspaceId();
         return insertTaskAirspace(task, result, list);
     }

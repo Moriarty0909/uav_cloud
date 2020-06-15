@@ -1,5 +1,8 @@
 package com.ccssoft.cloudadmin.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.lang.Console;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ccssoft.cloudcommon.entity.User;
 import com.ccssoft.cloudadmin.service.UserService;
@@ -9,13 +12,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * @author moriarty
  * @date 2020/5/20 09:50
  */
+@CrossOrigin(origins = "*",maxAge = 3600)
 @Controller
 @RequestMapping("/admin")
 @Slf4j
@@ -84,6 +91,20 @@ public class AdminController {
         return "login";
     }
 
-    //TODO 验证码
+    @GetMapping("/verificationCode")
+    @ResponseBody
+    public R getVerificationCode (HttpServletResponse response) {
+        //定义图形验证码的长和宽
+        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(200, 100);
+        String img = captcha.getImageBase64();
+        String code = captcha.getCode();
+        Console.log(code);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("captcha","data:image/png;base64,"+img);
+
+        return R.ok(map);
+    }
+
 
 }

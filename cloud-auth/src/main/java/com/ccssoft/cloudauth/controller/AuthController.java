@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 /**
@@ -35,6 +36,14 @@ public class AuthController {
 
     @Resource
     private UavService uavService;
+
+    @GetMapping("/consumer/admin/verificationCode")
+    @ResponseBody
+    public R getVerificationCode (HttpServletResponse response) {
+        System.out.println(11111);
+        return adminService.getVerificationCode(response);
+    }
+
     @ApiOperation("注册新用户")
     @PostMapping(value = "/consumer/admin/registerUser")
     public R registerUser(@ApiParam("包含用户信息的实体类") @RequestBody User user) {

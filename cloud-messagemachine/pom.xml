@@ -19,13 +19,6 @@
     </properties>
 
     <dependencies>
-        <!--算海拔的依赖-->
-        <dependency>
-            <groupId>org.gdal</groupId>
-            <artifactId>gdal</artifactId>
-            <version>3.1.0</version>
-            <scope>compile</scope>
-        </dependency>
         <!--websocket整合-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
