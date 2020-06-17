@@ -72,10 +72,15 @@ public interface AdminService {
 
     /**
      * 获取验证码
-     * @param response http请求
      * @return 分页数据
      */
     @GetMapping("/admin/verificationCode")
-    @ResponseBody
-    R getVerificationCode (HttpServletResponse response);
+    R getVerificationCode ();
+
+    /**
+     * 获取用户数量
+     * @return
+     */
+    @GetMapping("/admin/getUserCount")
+    R getUserCount ();
 }

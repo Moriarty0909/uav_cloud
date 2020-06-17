@@ -9,7 +9,7 @@ spring:
     username: root
     password: 123456
   redis:
-    port: 6379
+    port: 16379
     host: 183.56.219.211
     timeout: 30000
     database: 0

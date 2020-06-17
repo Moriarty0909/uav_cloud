@@ -1,5 +1,7 @@
 package com.ccssoft.cloudadmin.service.impl;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +15,8 @@ import com.ccssoft.cloudadmin.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author moriarty
@@ -80,5 +84,33 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             return result ==1 ? true : false;
         }
         return false;
+    }
+
+    @Override
+    public Map getVerificationCode() {
+        //定义图形验证码的长和宽
+        LineCaptcha captcha = CaptchaUtil.createLineCaptcha(100, 40);
+        String img = captcha.getImageBase64();
+        String code = captcha.getCode();
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("captcha","data:image/png;base64,"+img);
+        map.put("key",code);
+
+        redisUtil.set(code,img,60);
+        return map;
+    }
+
+    @Override
+    public int getUserCount() {
+        if (redisUtil.get("userCount") == null) {
+            QueryWrapper<User> wrapper = new QueryWrapper();
+            wrapper.eq("role_id",2);
+            Integer integer = userDao.selectCount(wrapper);
+            redisUtil.set("userCount",integer);
+            return integer;
+        }
+
+        return (int)redisUtil.get("userCount");
     }
 }

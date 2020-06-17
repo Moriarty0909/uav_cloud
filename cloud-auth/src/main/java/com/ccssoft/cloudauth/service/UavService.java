@@ -64,6 +64,13 @@ public interface UavService {
      * @param uavId 无人机id
      * @return 是否成功
      */
-    @GetMapping("/getUavById/{id}")
+    @GetMapping("/uav/getUavById/{id}")
     Uav getUavById (@PathVariable("id") Long uavId);
+
+    /**
+     * 获取所有无人机的数量
+     * @return 数量
+     */
+    @GetMapping("/uav/getUavCount")
+    int getUavCount();
 }

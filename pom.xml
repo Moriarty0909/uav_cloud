@@ -28,6 +28,8 @@
         <module>cloud-uav</module>
         <module>cloud-airspace</module>
         <module>cloud-task</module>
+        <module>cloud-ui</module>
     </modules>
+
 
 </project>

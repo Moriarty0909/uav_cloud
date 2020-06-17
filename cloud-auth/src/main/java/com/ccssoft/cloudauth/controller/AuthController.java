@@ -12,6 +12,7 @@ import com.ccssoft.cloudcommon.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,11 +38,10 @@ public class AuthController {
     @Resource
     private UavService uavService;
 
+
     @GetMapping("/consumer/admin/verificationCode")
-    @ResponseBody
-    public R getVerificationCode (HttpServletResponse response) {
-        System.out.println(11111);
-        return adminService.getVerificationCode(response);
+    public R getVerificationCode () {
+        return adminService.getVerificationCode();
     }
 
     @ApiOperation("注册新用户")
@@ -72,6 +72,12 @@ public class AuthController {
     @GetMapping(value = "/consumer/admin/getUser/{username}")
     public R getUser(@ApiParam("对应需获取用户详情的用户名") @PathVariable("username") String userName) {
         return adminService.getInfo(userName);
+    }
+
+    @ApiOperation("获取游客数量总数")
+    @GetMapping(value = "/consumer/admin/getUserCount")
+    public R getUserCount() {
+        return adminService.getUserCount();
     }
 
     @ApiOperation("以分页的形式获取所有的游客用户信息")
@@ -209,7 +215,7 @@ public class AuthController {
 
 
     @ApiOperation("以分页形式获取对应各自用户id的无人机数据")
-    @GetMapping("/uav/getUavByUserId4Page/{current}&{size}&{id}")
+    @GetMapping("/consumer/uav/getUavByUserId4Page/{current}&{size}&{id}")
     public R getUavByUserId4Page(@ApiParam("当前页数") @PathVariable("current") int current ,
                                  @ApiParam("每页数据量") @PathVariable("size") int size ,
                                  @ApiParam("用户id") @PathVariable("id") Long userId) {
@@ -217,9 +223,16 @@ public class AuthController {
     }
 
     @ApiOperation("获取单个无人机详情")
-    @GetMapping("/uav/getUavByUavId/{id}")
+    @GetMapping("/consumer/uav/getUavByUavId/{id}")
     public R getUavByUavId(@ApiParam("无人机id") @PathVariable("id") Long uavId) {
         Uav uav = uavService.getUavById(uavId);
         return uav != null ? R.ok(uav) : R.error(301,"无此无人机！");
+    }
+
+    @ApiOperation("获取所有无人机数量")
+    @GetMapping("/consumer/uav/getUavCount")
+    public R getUavCount() {
+        int number = uavService.getUavCount();
+        return R.ok(number);
     }
 }

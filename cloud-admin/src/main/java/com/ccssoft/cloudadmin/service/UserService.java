@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ccssoft.cloudcommon.entity.User;
 
+import java.util.Map;
+
 /**
  * @author moriarty
  * @date 2020/5/20 09:56
@@ -32,4 +34,16 @@ public interface UserService extends IService<User> {
      * @return 成功与否
      */
     boolean saveDB(User user);
+
+    /**
+     * 获取验证码
+     * @return 包含码和图形的map
+     */
+    Map getVerificationCode ();
+
+    /**
+     * 获取在册游客用户数量
+     * @return
+     */
+    int getUserCount ();
 }

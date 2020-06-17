@@ -103,4 +103,9 @@ public class UavServiceImpl extends ServiceImpl<UavDao, Uav> implements UavServi
 
     }
 
+    @Override
+    public int getUavCount() {
+        return uavDao.selectCount(null);
+    }
+
 }

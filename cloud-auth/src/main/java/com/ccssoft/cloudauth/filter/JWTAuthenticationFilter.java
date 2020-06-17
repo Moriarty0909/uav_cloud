@@ -1,25 +1,30 @@
 package com.ccssoft.cloudauth.filter;
 
-import com.ccssoft.cloudauth.dao.UserDao;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.ccssoft.cloudauth.entity.JwtUser;
 import com.ccssoft.cloudauth.model.LoginUser;
 import com.ccssoft.cloudauth.utils.JwtTokenUtils;
+import com.ccssoft.cloudcommon.common.utils.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 验证用户名密码正确后，生成一个token，并将token返回给客户端
@@ -30,9 +35,9 @@ import java.util.Collection;
  * @date 2020/5/19 16:51
  */
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    @Resource
-    private UserDao userDao;
+
     private ThreadLocal<Integer> rememberMe = new ThreadLocal<>();
+
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -52,6 +57,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 从输入流中获取到登录的信息
         try {
             LoginUser loginUser = new ObjectMapper().readValue(request.getInputStream(), LoginUser.class);
+            System.out.println(loginUser);
             rememberMe.set(loginUser.getRememberMe() == null ? 0 : loginUser.getRememberMe());
 
             return authenticationManager.authenticate(
@@ -70,6 +76,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
+        System.out.println("验证成功，开始生成令牌");
         JwtUser jwtUser = (JwtUser) authResult.getPrincipal();
         boolean isRemember = rememberMe.get() == 1;
 
@@ -87,11 +94,26 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 按照jwt的规定，最后请求的时候应该是 `Bearer token`
 
         response.setHeader("Access-Control-Expose-Headers",JwtTokenUtils.TOKEN_HEADER);
-        response.setHeader("token", JwtTokenUtils.TOKEN_PREFIX + token);
+        response.setHeader(JwtTokenUtils.TOKEN_HEADER, JwtTokenUtils.TOKEN_PREFIX + token);
+        PrintWriter writer = response.getWriter();
+        Map map = new HashMap();
+        map.put("code",200);
+        map.put("msg","success");
+        writer.write(String.valueOf(JSONUtil.parse(map)));
+        writer.flush();
+        writer.close();
+
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.getWriter().write("authentication failed, reason: " + failed.getMessage());
+        PrintWriter writer = response.getWriter();
+        Map map = new HashMap();
+        map.put("code",301);
+        map.put("msg",failed.getMessage());
+        writer.write(String.valueOf(JSONUtil.parse(map)));
+        writer.flush();
+        writer.close();
     }
+
 }

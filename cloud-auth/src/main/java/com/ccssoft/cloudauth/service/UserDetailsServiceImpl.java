@@ -24,6 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private RoleDao roleDao;
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        //TODO 过滤器
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("username",s);
         User user = userDao.selectOne(wrapper);

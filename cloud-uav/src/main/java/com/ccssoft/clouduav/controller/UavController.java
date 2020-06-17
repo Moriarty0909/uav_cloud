@@ -100,6 +100,12 @@ public class UavController {
         return uavService.removeById(uavId) ? R.ok() : R.error(300,"删除失败！");
     }
 
+    @GetMapping("/getUavCount")
+    public R getUavCount () {
+        log.info("UavController.getUavCount()");
+        return R.ok(uavService.getUavCount());
+    }
+
     /**
      * 根据UserId来获取对应的关系列表中的UavId，供远程服务调用
      * @param userId 用户id
