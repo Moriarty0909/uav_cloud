@@ -144,7 +144,8 @@
         window.onload=function(){
             $("#username").text(localStorage.Username);
             getUserCount();
-        }
+            getUavCount();
+        };
 
 
         function getUserCount() {
@@ -172,14 +173,14 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/admin/getUserCount",
+                url: "http://localhost:9001/consumer/uav/getUavCount",
                 success: function (result, textStatus, request) {
                     if (!window.localStorage) {
                         alert("浏览器不支持localstorage");
                         return false;
                     } else {
                         localStorage.Authorization = request.getResponseHeader("Authorization");
-                        $("#userNumber").text(result.object);
+                        $("#uavNumber").text(result.object);
                     }
                 }
             })

@@ -232,7 +232,6 @@ public class AuthController {
     @ApiOperation("获取所有无人机数量")
     @GetMapping("/consumer/uav/getUavCount")
     public R getUavCount() {
-        int number = uavService.getUavCount();
-        return R.ok(number);
+        return uavService.getUavCount();
     }
 }

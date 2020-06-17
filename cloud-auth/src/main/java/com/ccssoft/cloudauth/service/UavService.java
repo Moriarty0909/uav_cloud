@@ -72,5 +72,5 @@ public interface UavService {
      * @return 数量
      */
     @GetMapping("/uav/getUavCount")
-    int getUavCount();
+    R getUavCount ();
 }
