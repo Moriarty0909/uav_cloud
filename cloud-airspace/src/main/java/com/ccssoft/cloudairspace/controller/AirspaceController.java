@@ -150,7 +150,7 @@ public class AirspaceController {
      * @return 一组Airspace的list
      */
     @PostMapping("/getAirspaceByAirspaceIds")
-    public List<Airspace> getAirspaceByAirspaceIds (ArrayList<Long> list) {
+    public List<Airspace> getAirspaceByAirspaceIds (@RequestParam("list") ArrayList<Long> list) {
         log.info("AirspaceController.getAirspaceByAirspaceIds(),参数={}",list);
         return airspaceService.getAirspaceByAirspaceIds(list);
     }

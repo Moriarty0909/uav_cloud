@@ -40,9 +40,11 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="开始日" name="start" id="start"></div>
+                                    <input class="layui-input" placeholder="开始日" name="start" id="start">
+                                </div>
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="截止日" name="end" id="end"></div>
+                                    <input class="layui-input" placeholder="截止日" name="end" id="end">
+                                </div>
                                 <div class="layui-input-inline layui-show-xs-block">
                                     <select name="contrller">
                                         <option>支付方式</option>
@@ -71,7 +73,7 @@
                         <div class="layui-card-header">
                             <button class="layui-btn layui-btn-danger" onclick="delAll()">
                                 <i class="layui-icon"></i>批量删除</button>
-                            <button class="layui-btn" onclick="xadmin.open('创建计划','order-add.html',800,600)">
+                            <button class="layui-btn" onclick="xadmin.open('创建计划','task-add.html',800,600)">
                                 <i class="layui-icon"></i>创建计划</button></div>
                         <div class="layui-card-body ">
                             <table class="layui-table layui-form">
@@ -100,12 +102,13 @@
                         <div class="layui-card-body ">
                             <div class="page">
                                 <div>
-                                    <a class="prev" href="javascript:void(0)"  οnclick="foward()">&lt;&lt;</a>
+                                    <button class="prev" onclick="forword()">&lt;&lt;</button>
                                     <a class="num" id="before"></a>
                                     <span class="current" id="current"></span>
                                     <a class="num" id="after"></a>
                                     <a class="num" id="total"></a>
-                                    <a class="next" href="javascript:void(0)" οnclick="backward()">&gt;&gt;</a></div>
+                                    <button class="next" onclick="backward()">&gt;&gt;</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,14 +177,19 @@
                     $("#tasktable").html(str);
                     current = result.object.current;
                     if (current == 1 && current == result.object.pages) {
+                        $("#before").attr("style","display:none;");
                         $("#current").text(current);
+                        $("#after").attr("style","display:none;");
+                        $("#total").attr("style","display:none;");
                     } else if (current == 1) {
+                        $("#before").attr("style","display:none;");
                         $("#current").text(current);
                         $("#after").text(current+1);
                         $("#total").text(result.object.pages);
                     } else if (current == result.object.pages) {
                         $("#current").text(current);
                         $("#before").text(current-1);
+                        $("#after").attr("style","display:none;");
                         $("#total").text(result.object.pages);
                     } else {
                         $("#current").text(current);
@@ -195,14 +203,13 @@
             })
         }
 
-        function foward() {
-            alert(1)
+        function forword() {
+            alert(1111)
         }
 
         function backward() {
-            alert(2)
-        }
 
+        }
     </script>
 
 </html>

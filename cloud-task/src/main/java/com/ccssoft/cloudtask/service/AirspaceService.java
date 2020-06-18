@@ -16,5 +16,5 @@ import java.util.List;
 @FeignClient(value = "airspace-server")//调用哪个微服务
 public interface AirspaceService {
     @PostMapping(value = "/airspace/getAirspaceByAirspaceIds")
-    List<Airspace> getAirspaceByAirspaceIds (ArrayList<Long> list);
+    List<Airspace> getAirspaceByAirspaceIds (@RequestParam("list") ArrayList<Long> list);
 }

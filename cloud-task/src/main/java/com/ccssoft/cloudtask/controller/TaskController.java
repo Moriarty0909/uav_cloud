@@ -196,10 +196,10 @@ public class TaskController {
             TaskVo taskVo = new TaskVo();
             BeanUtils.copyProperties(task,taskVo);
             //获取空域的名称
-            List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(taskService.getAirspaceIdByTaskId(task.getId()));
+            ArrayList airspaceIdByTaskId = taskService.getAirspaceIdByTaskId(task.getId());
+            List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(airspaceIdByTaskId);
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
-                Console.log(airspace);
                 nameList.add(airspace.getAirspaceName());
             }
             taskVo.setAirspaceName(nameList);

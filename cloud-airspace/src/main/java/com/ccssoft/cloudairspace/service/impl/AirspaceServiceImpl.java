@@ -124,8 +124,9 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     @Override
     public List<Airspace> getAirspaceByAirspaceIds(List<Long> airspaceIds) {
         List<Airspace> list = new ArrayList<>();
-        for (Long airspaceId : airspaceIds) {
-            String numId = String.valueOf(airspaceId);
+        for (int i = 0; i < airspaceIds.size(); i++) {
+
+            String numId = String.valueOf(airspaceIds.get(i));
             if (!bloomFilter.isExist(numId)) {
                 return null;
             }
@@ -133,7 +134,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             Airspace airspace = JSONUtil.parseObj(redisUtil.get(numId)).toBean(Airspace.class);
             if (airspace != null) {
                 list.add(airspace);
-                airspaceIds.remove(airspaceId);
+                airspaceIds.remove(airspaceIds.get(i));
             }
         }
         //全部在缓存中找到
@@ -147,7 +148,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             list.add(airspace);
             redisUtil.set(String.valueOf(airspace.getId()),airspace);
         }
-
+        System.out.println(list);
         return list;
     }
 
