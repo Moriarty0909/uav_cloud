@@ -99,6 +99,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Map map = new HashMap();
         map.put("code",200);
         map.put("msg","success");
+        map.put("userid",""+jwtUser.getId());
         writer.write(String.valueOf(JSONUtil.parse(map)));
         writer.flush();
         writer.close();

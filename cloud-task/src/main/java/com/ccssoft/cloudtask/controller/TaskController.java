@@ -144,7 +144,7 @@ public class TaskController {
     }
 
     /**
-     * 分页获取对应用户所有飞机计划数据
+     * 分页获取对应用户所有飞行计划数据
      * @param current 当前页数
      * @param size 每页数量
      * @param userId 用户id
@@ -152,10 +152,30 @@ public class TaskController {
      */
     @GetMapping("/getTaskByUserId4Page/{current}&{size}&{userId}")
     public R getTaskByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size, @PathVariable("userId") Long userId) {
-        log.info("TaskController.getAllTask4Page(),参数:当前页数={}，一页{}个数据.",current,size);
+        log.info("TaskController.getAllTask4Page(),参数:当前页数={}，一页{}个数据,用户id{}",current,size,userId);
         //获取user对应的task
         List<Long> uavIds = uavService.getUavIdByUserId(userId);
         return uavIds != null ? R.ok(getTheVoPage(current,size,uavIds)) : R.error(301,"此用户id下没有对应的无人机");
+    }
+
+    /**
+     * 获取已经批复的飞行计划总数
+     * @return 数量
+     */
+    @GetMapping("/getApprovaledCount")
+    public R getApprovaledCount () {
+        log.info("TaskController.getApprovaledCount()");
+        return R.ok(taskService.getApprovaledCount());
+    }
+
+    /**
+     * 获取未批复的飞行计划总数
+     * @return 数量
+     */
+    @GetMapping("/getNoApprovaledCount")
+    public R getNoApprovaledCount () {
+        log.info("TaskController.getNoApprovaledCount()");
+        return R.ok(taskService.getNoApprovaledCount());
     }
 
 

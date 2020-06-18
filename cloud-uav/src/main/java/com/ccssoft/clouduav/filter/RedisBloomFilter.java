@@ -73,7 +73,7 @@ public class RedisBloomFilter {
             public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
                 redisConnection.openPipeline();
                 for (long index : indexs) {
-                    redisConnection.setBit("bf:cloud".getBytes(),index,true);
+                    redisConnection.setBit("bf:uav".getBytes(),index,true);
                 }
                 redisConnection.close();
                 return null;
@@ -89,7 +89,7 @@ public class RedisBloomFilter {
             public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
                 redisConnection.openPipeline();
                 for (long index :indexs) {
-                    redisConnection.getBit("bf:cloud".getBytes(),index);
+                    redisConnection.getBit("bf:uav".getBytes(),index);
                 }
                 redisConnection.close();
                 return null;

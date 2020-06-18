@@ -42,4 +42,15 @@ public interface TaskService extends IService<Task> {
      */
     int updateInfo(Task task);
 
+    /**
+     * 获取状态为1的计划数量
+     * @return 数量
+     */
+    Integer getApprovaledCount();
+
+    /**
+     * 获取状态为0的计划数量
+     * @return 数量
+     */
+    Integer getNoApprovaledCount();
 }

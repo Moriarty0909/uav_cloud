@@ -139,6 +139,18 @@ public class AuthController {
         return airspaceService.getAirspaceByAirspaceId(AirspaceId);
     }
 
+    @ApiOperation("获取已批复了的空域数量，以供页面展示")
+    @GetMapping("/consumer/airspace/getApprovaledCount")
+    public R getApprovaledCount() {
+        return airspaceService.getApprovaledCount();
+    }
+
+    @ApiOperation("获取未批复的空域数量，以供页面展示")
+    @GetMapping("/consumer/airspace/getNoApprovaledCount")
+    public R getNoApprovaledCount() {
+        return airspaceService.getNoApprovaledCount();
+    }
+
     //===============飞行计划模块============
 
     @ApiOperation("创建飞行计划")
@@ -184,6 +196,18 @@ public class AuthController {
                                   @ApiParam("每页数据量") @PathVariable("size") int size ,
                                   @ApiParam("对应的用户id") @PathVariable("id") Long userId) {
         return taskService.getTaskByUserId4Page(current,size,userId);
+    }
+
+    @ApiOperation("获取飞行计划已批准的任务数，供展示页面使用")
+    @GetMapping("/consumer/task/getApprovaledCount")
+    public R getTaskApprovaledCount() {
+        return taskService.getApprovaledCount();
+    }
+
+    @ApiOperation("获取飞行计划未批准的任务数，供展示页面使用")
+    @GetMapping("/consumer/task/getNoApprovaledCount")
+    public R getTaskNoApprovaledCount() {
+        return taskService.getNoApprovaledCount();
     }
 
     //============无人机模块=================

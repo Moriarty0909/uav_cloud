@@ -77,4 +77,18 @@ public interface TaskService {
      */
     @GetMapping("/task/getTaskByUserId4Page/{current}&{size}&{userId}")
     R getTaskByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size, @PathVariable("userId") Long userId);
+
+    /**
+     * 远程调用飞行计划模块的获取已经批复的飞行计划总数功能
+     * @return R
+     */
+    @GetMapping("/task/getApprovaledCount")
+    R getApprovaledCount ();
+
+    /**
+     * 远程调用飞行计划模块的获取未批复的飞行计划总数功能
+     * @return R
+     */
+    @GetMapping("/task/getNoApprovaledCount")
+    R getNoApprovaledCount ();
 }

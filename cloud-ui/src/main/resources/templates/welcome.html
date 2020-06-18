@@ -51,28 +51,28 @@
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>已批复飞行计划数</h3>
                                         <p>
-                                            <cite>99</cite></p>
+                                            <cite id="taskApprovaledNumber"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>待批复飞行计划数</h3>
                                         <p>
-                                            <cite>67</cite></p>
+                                            <cite id="taskNoApprovaledNumber"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>已批复空域数</h3>
                                         <p>
-                                            <cite>67</cite></p>
+                                            <cite id="airspaceApprovaledNumber"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6 ">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3>待批复空域数</h3>
                                         <p>
-                                            <cite>6766</cite></p>
+                                            <cite id="airspaceNoApprovaledNumber"></cite></p>
                                     </a>
                                 </li>
                             </ul>
@@ -145,6 +145,10 @@
             $("#username").text(localStorage.Username);
             getUserCount();
             getUavCount();
+            getTaskApprovaledCount();
+            getTaskNoApprovalCount();
+            getAirspaceApprovaledCount();
+            getAirspaceNoApprovalCount();
         };
 
 
@@ -160,7 +164,7 @@
                         alert("浏览器不支持localstorage");
                         return false;
                     } else {
-                        localStorage.Authorization = request.getResponseHeader("Authorization");
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
                         $("#userNumber").text(result.object);
                     }
                 }
@@ -179,8 +183,84 @@
                         alert("浏览器不支持localstorage");
                         return false;
                     } else {
-                        localStorage.Authorization = request.getResponseHeader("Authorization");
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
                         $("#uavNumber").text(result.object);
+                    }
+                }
+            })
+        }
+
+        function getTaskApprovaledCount() {
+            $.ajax({
+                type: 'get',
+                headers: {
+                    Authorization: localStorage.Authorization
+                },
+                url: "http://localhost:9001/consumer/task/getApprovaledCount",
+                success: function (result, textStatus, request) {
+                    if (!window.localStorage) {
+                        alert("浏览器不支持localstorage");
+                        return false;
+                    } else {
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
+                        $("#taskApprovaledNumber").text(result.object);
+                    }
+                }
+            })
+        }
+
+        function getTaskNoApprovalCount() {
+            $.ajax({
+                type: 'get',
+                headers: {
+                    Authorization: localStorage.Authorization
+                },
+                url: "http://localhost:9001/consumer/task/getNoApprovaledCount",
+                success: function (result, textStatus, request) {
+                    if (!window.localStorage) {
+                        alert("浏览器不支持localstorage");
+                        return false;
+                    } else {
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
+                        $("#taskNoApprovaledNumber").text(result.object);
+                    }
+                }
+            })
+        }
+
+        function getAirspaceApprovaledCount() {
+            $.ajax({
+                type: 'get',
+                headers: {
+                    Authorization: localStorage.Authorization
+                },
+                url: "http://localhost:9001/consumer/airspace/getApprovaledCount",
+                success: function (result, textStatus, request) {
+                    if (!window.localStorage) {
+                        alert("浏览器不支持localstorage");
+                        return false;
+                    } else {
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
+                        $("#airspaceApprovaledNumber").text(result.object);
+                    }
+                }
+            })
+        }
+
+        function getAirspaceNoApprovalCount() {
+            $.ajax({
+                type: 'get',
+                headers: {
+                    Authorization: localStorage.Authorization
+                },
+                url: "http://localhost:9001/consumer/airspace/getNoApprovaledCount",
+                success: function (result, textStatus, request) {
+                    if (!window.localStorage) {
+                        alert("浏览器不支持localstorage");
+                        return false;
+                    } else {
+                        // localStorage.Authorization = request.getResponseHeader("Authorization");
+                        $("#airspaceNoApprovaledNumber").text(result.object);
                     }
                 }
             })

@@ -1,6 +1,5 @@
 package com.ccssoft.cloudtask.service;
 
-import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Uav;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;

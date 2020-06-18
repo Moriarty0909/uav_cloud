@@ -2,6 +2,7 @@ package com.ccssoft.cloudauth.entity;
 
 import com.ccssoft.cloudauth.dao.RoleDao;
 import com.ccssoft.cloudcommon.entity.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.Collections;
  * @author moriarty
  * @date 2020/5/19 15:30
  */
+@Data
 public class JwtUser implements UserDetails {
     private Long id;
     private String username;

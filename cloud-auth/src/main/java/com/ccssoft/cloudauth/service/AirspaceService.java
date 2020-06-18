@@ -82,4 +82,18 @@ public interface AirspaceService {
      */
     @GetMapping("/airspace/deleteAirspace/{id}")
     R deleteAirspace (@PathVariable("id") Long airspaceId);
+
+    /**
+     * 远程调用有关空域管理模块的获取未审批通过的空域数量功能
+     * @return
+     */
+    @GetMapping("/airspace/getNoApprovaledCount")
+    R getNoApprovaledCount ();
+
+    /**
+     * 远程调用有关空域管理模块的获取已审批通过的空域数量功能
+     * @return
+     */
+    @GetMapping("/airspace/getApprovaledCount")
+    R getApprovaledCount ();
 }

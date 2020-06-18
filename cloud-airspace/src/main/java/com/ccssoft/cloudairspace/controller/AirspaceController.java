@@ -112,6 +112,26 @@ public class AirspaceController {
     }
 
     /**
+     * 获取未审批通过的空域数量
+     * @return 数量
+     */
+    @GetMapping("/getNoApprovaledCount")
+    public R getNoApprovaledCount () {
+        log.info("AirspaceController.getNoApprovaledCount()");
+        return R.ok(airspaceService.getNoApprovaledCount());
+    }
+
+    /**
+     * 获取已审批通过的空域数量
+     * @return 数量
+     */
+    @GetMapping("/getApprovaledCount")
+    public R getApprovaledCount () {
+        log.info("AirspaceController.getApprovaledCount()");
+        return R.ok(airspaceService.getApprovaledCount());
+    }
+
+    /**
      * 删除空域
      * @param airspaceId 空域id
      * @return 是否成功
@@ -130,7 +150,7 @@ public class AirspaceController {
      * @return 一组Airspace的list
      */
     @PostMapping("/getAirspaceByAirspaceIds")
-    public List<Airspace> getAirspaceByAirspaceIds (@RequestParam("idList") ArrayList<Long> list) {
+    public List<Airspace> getAirspaceByAirspaceIds (ArrayList<Long> list) {
         log.info("AirspaceController.getAirspaceByAirspaceIds(),参数={}",list);
         return airspaceService.getAirspaceByAirspaceIds(list);
     }

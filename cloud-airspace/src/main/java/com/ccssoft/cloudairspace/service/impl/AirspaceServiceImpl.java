@@ -157,6 +157,20 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         return airspaceDao.updateInfo(airspace);
     }
 
+    @Override
+    public Integer getNoApprovaledCount() {
+        QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+        wrapper.eq("status",0);
+        return airspaceDao.selectCount(wrapper);
+    }
+
+    @Override
+    public Integer getApprovaledCount() {
+        QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+        wrapper.eq("status",1);
+        return airspaceDao.selectCount(wrapper);
+    }
+
     private List<Long> getAirspaceIdsByUserId (Long userId) {
         String numId = String.valueOf(userId);
         //在默认不删表的情况下，查到这个就也能表明对应的另一张表也是会有对应的数据的,后续的工作就可以直接进行

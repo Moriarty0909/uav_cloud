@@ -97,6 +97,20 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
         return insertTaskAirspace(task, result, list) ;
     }
 
+    @Override
+    public Integer getApprovaledCount() {
+        QueryWrapper<Task> wrapper = new QueryWrapper();
+        wrapper.eq("status",1);
+        return taskDao.selectCount(wrapper);
+    }
+
+    @Override
+    public Integer getNoApprovaledCount() {
+        QueryWrapper<Task> wrapper = new QueryWrapper();
+        wrapper.eq("status",0);
+        return taskDao.selectCount(wrapper);
+    }
+
     private int insertTaskAirspace(Task task, int result, List<Long> list) {
         if (ObjectUtil.length(list) > 1 && result == 1) {
             for (Long id : list) {

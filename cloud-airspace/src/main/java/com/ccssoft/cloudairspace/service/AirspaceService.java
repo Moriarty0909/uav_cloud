@@ -73,4 +73,16 @@ public interface AirspaceService extends IService<Airspace> {
      * @return 成功与否
      */
     int updateAirSpace(Airspace airspace);
+
+    /**
+     * 获取未批准的空域数量
+     * @return 数量
+     */
+    Integer getNoApprovaledCount();
+
+    /**
+     * 获取已批准的空域数量
+     * @return 数量
+     */
+    Integer getApprovaledCount();
 }
