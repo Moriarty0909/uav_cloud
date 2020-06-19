@@ -178,6 +178,12 @@ public class TaskController {
         return R.ok(taskService.getNoApprovaledCount());
     }
 
+    @GetMapping("/getNatrue")
+    public R getNatrueName () {
+        log.info("TaskController.getNatrueName()");
+        return R.ok(taskService.getNatrueName());
+    }
+
 
     private Page getTheVoPage (int current, int size,List uavIds) {
         QueryWrapper<Task> wrapper = new QueryWrapper();

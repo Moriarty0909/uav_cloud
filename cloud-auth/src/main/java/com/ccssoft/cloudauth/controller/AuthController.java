@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author moriarty
@@ -130,7 +131,8 @@ public class AuthController {
     @ApiOperation("通过用户id获取其相关的空域信息，以用户查看自己所拥有的所有空域")
     @GetMapping("/consumer/airspace/getAiarspaceByUserId/{id}")
     public R getAiarspaceByUserId(@ApiParam("用户id") @PathVariable("id") Long userId) {
-        return airspaceService.getAirspaceByUserId(userId);
+        R airspaceByUserId = airspaceService.getAirspaceByUserId(userId);
+        return airspaceByUserId;
     }
 
     @ApiOperation("通过空域id获取其对应的空域详情")
@@ -210,6 +212,12 @@ public class AuthController {
         return taskService.getNoApprovaledCount();
     }
 
+    @ApiOperation("获取所有的用途名称，供前端页面展示")
+    @GetMapping("/consumer/task/getNatrue")
+    public R getNatrue() {
+        return taskService.getNatrueName();
+    }
+
     //============无人机模块=================
 
     @ApiOperation("注册无人机")
@@ -244,6 +252,13 @@ public class AuthController {
                                  @ApiParam("每页数据量") @PathVariable("size") int size ,
                                  @ApiParam("用户id") @PathVariable("id") Long userId) {
         return uavService.getUavByUserId4Page(current,size,userId);
+    }
+
+    @ApiOperation("以list形式获取对应各自用户id的无人机数据")
+    @GetMapping("/consumer/uav/getUavsByUserId/{id}")
+    public R getUavsByUserId(@ApiParam("用户id") @PathVariable("id") Long userId) {
+        List uavIdByUserId = uavService.getUavsByUserId(userId);
+        return uavIdByUserId.size() != 0 ? R.ok(uavIdByUserId) : R.error(301,"无此数据！");
     }
 
     @ApiOperation("获取单个无人机详情")

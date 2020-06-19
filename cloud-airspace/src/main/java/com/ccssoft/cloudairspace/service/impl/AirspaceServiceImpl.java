@@ -76,14 +76,15 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     public List<Airspace> getAirspaceByUserId(Long userId) {
         List list = getAirspaceIdsByUserId(userId);
 
-        if (redisUtil.get(String.valueOf(userId)) == null) {
+        if (redisUtil.get("airBy"+userId) == null) {
             List<Airspace> airspaceListByIdList = airspaceDao.getAirspaceListByIdList(list);
-            redisUtil.set(String.valueOf(userId),airspaceListByIdList,6000);
+            redisUtil.set("airBy"+userId,airspaceListByIdList,6000);
             return airspaceListByIdList;
         }
 
-        JSONObject obj = JSONUtil.parseObj(redisUtil.get("airspace"+userId));
-        return obj.toBean(List.class);
+        List result = JSONUtil.parseArray(redisUtil.get("airBy"+userId));
+
+        return result;
 
     }
 
@@ -148,7 +149,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             list.add(airspace);
             redisUtil.set(String.valueOf(airspace.getId()),airspace);
         }
-        System.out.println(list);
+
         return list;
     }
 
@@ -179,7 +180,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             return null;
         }
 
-        if (redisUtil.get(numId) == null) {
+        if (redisUtil.get("airidBy"+numId) == null) {
             QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
             wrapper.eq("user_id",userId);
             List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
@@ -188,11 +189,11 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             for (UserAirspace userAirspace : userAirspaces) {
                 list.add(userAirspace.getAirspaceId());
             }
-            redisUtil.set(numId,list);
+            redisUtil.set("airidBy"+numId,list);
             return list;
         }
 
-        JSONObject obj = JSONUtil.parseObj(redisUtil.get(numId));
-        return obj.toBean(List.class);
+        List list = JSONUtil.parseArray(redisUtil.get("airidBy"+numId));
+        return list;
     }
 }

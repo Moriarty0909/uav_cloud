@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudtask.dao.TaskAirspaceDao;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.ccssoft.cloudtask.dao.TaskDao;
+import com.ccssoft.cloudtask.dao.TaskNatrueDao;
 import com.ccssoft.cloudtask.entity.TaskAirspace;
+import com.ccssoft.cloudtask.entity.TaskNatrue;
 import com.ccssoft.cloudtask.filter.RedisBloomFilter;
 import com.ccssoft.cloudtask.service.TaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -40,6 +42,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
 
     @Resource
     private RedisBloomFilter bloomFilter;
+
+    @Resource
+    private TaskNatrueDao taskNatrueDao;
 
     @Override
     @Transactional(rollbackFor=Exception.class)
@@ -109,6 +114,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
         QueryWrapper<Task> wrapper = new QueryWrapper();
         wrapper.eq("status",0);
         return taskDao.selectCount(wrapper);
+    }
+
+    @Override
+    public List getNatrueName() {
+        return taskNatrueDao.selectList(null);
     }
 
     private int insertTaskAirspace(Task task, int result, List<Long> list) {

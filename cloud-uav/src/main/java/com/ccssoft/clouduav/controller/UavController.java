@@ -107,6 +107,35 @@ public class UavController {
     }
 
     /**
+     * 根据UserId来获取对应的关系列表中的Uavs
+     * @param userId 用户id
+     * @return 一组uav数据
+     */
+    @GetMapping("/getUavsByUserId")
+    public List getUavsByUserId (@RequestParam("userId") Long userId) {
+        log.info("UavController.getUavsByUserId(),参数:userId={}",userId);
+        String numId = String.valueOf(userId);
+        if (!bloomFilter.isExist(numId)) {
+            return null;
+        }
+
+        if (redisUtil.get("uavBy"+numId) == null) {
+            QueryWrapper<UserUav> wrapper = new QueryWrapper();
+            wrapper.eq("user_id",userId);
+            List<Uav> list = new ArrayList();
+            for (UserUav userUav : userUavService.list(wrapper)) {
+                QueryWrapper<Uav> uavQueryWrapper = new QueryWrapper<>();
+                uavQueryWrapper.eq("id",userUav.getUavId());
+                list.add(uavService.getOne(uavQueryWrapper));
+            }
+            redisUtil.set("uavBy"+numId,list);
+            return list;
+        }
+
+        return JSONUtil.parseArray(redisUtil.get("uavBy"+numId));
+    }
+
+    /**
      * 根据UserId来获取对应的关系列表中的UavId，供远程服务调用
      * @param userId 用户id
      * @return 一组uavId数据

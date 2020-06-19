@@ -3,6 +3,7 @@ package com.ccssoft.cloudtask.service;
 import com.ccssoft.cloudcommon.entity.Task;
 import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -53,4 +54,10 @@ public interface TaskService extends IService<Task> {
      * @return 数量
      */
     Integer getNoApprovaledCount();
+
+    /**
+     * 获取所有的taskNatrue
+     * @return 一组数据
+     */
+    List getNatrueName();
 }

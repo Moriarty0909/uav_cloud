@@ -91,4 +91,11 @@ public interface TaskService {
      */
     @GetMapping("/task/getNoApprovaledCount")
     R getNoApprovaledCount ();
+
+    /**
+     * 远程调用飞行计划模块的获取用途列表功能
+     * @return R
+     */
+    @GetMapping("/task/getNatrue")
+    R getNatrueName ();
 }

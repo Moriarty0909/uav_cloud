@@ -73,4 +73,12 @@ public interface UavService {
      */
     @GetMapping("/uav/getUavCount")
     R getUavCount ();
+
+    /**
+     * 远程调用无人机模块的获取用户id对应的无人机详情功能
+     * @param userId 用户id
+     * @return 详情
+     */
+    @GetMapping("/uav/getUavsByUserId")
+    List getUavsByUserId (@RequestParam("userId") Long userId);
 }
