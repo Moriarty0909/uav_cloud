@@ -131,9 +131,10 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             if (!bloomFilter.isExist(numId)) {
                 return null;
             }
+            Object o = redisUtil.get(numId);
 
-            Airspace airspace = JSONUtil.parseObj(redisUtil.get(numId)).toBean(Airspace.class);
-            if (airspace != null) {
+            if (o != null) {
+                Airspace airspace = JSONUtil.parseObj(o).toBean(Airspace.class);
                 list.add(airspace);
                 airspaceIds.remove(airspaceIds.get(i));
             }

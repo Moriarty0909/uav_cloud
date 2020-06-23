@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=1c1fd3322a658a9a2fa80d562830e60c"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<style>
+    html, body, #container {
+        width: 100%;
+        height: 100%;
+        margin:0;
+    }
+</style>
+<body>
+    <div id="container"></div>
+
+
+    <script>
+        let myMap = new Map();
+
+        $(document).ready(function () {
+            var socket;
+
+            socket = new WebSocket("ws://183.56.219.211:8002/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
+            //打开事件
+            socket.onopen = function() {
+                alert("Socket 已打开");
+            };
+            //关闭事件
+            socket.onclose = function() {
+                alert("Socket已关闭");
+            };
+            //发生了错误事件
+            socket.onerror = function() {
+                alert("发生了错误");
+            }
+
+            //获得消息事件
+            socket.onmessage = function(msg) {
+                var message = msg.data;
+                console.log("这是接收到的信息："+message);
+                var data = message.split(":");
+                if (data[1] == "offline") {
+                    $("#"+data[0]).remove();
+                } else {
+                    var id = message.split(":",1);
+                    var a = $("#show div");
+                    for (var i = 0;i<a.length;i++) {
+                        var id1 = $(a[i]).attr("id");
+                        if (id1 == id) {
+                            $("#"+id).text(message);
+                            return;
+                        }
+                    }
+                    $("#show").append("<div id="+id+">"+message+"</div>");
+                }
+
+            };
+        });
+
+        var map = new AMap.Map('container',{
+            zoom:12,//级别
+            center: [108.314614,22.827239],//中心点坐标
+            viewMode:'3D'//使用3D视图
+        });
+        AMap.plugin(['AMap.ToolBar','AMap.Scale','AMap.OverView'],function(){
+            map.addControl(new AMap.ToolBar());
+            map.addControl(new AMap.Scale());
+            map.addControl(new AMap.OverView({isOpen:true}));
+        });
+
+        var circleMarker = new AMap.CircleMarker({
+            center:[108.314614,22.827239],
+            radius:9,// 圆半径
+            strokeColor:'white',
+            strokeWeight:2,
+            strokeOpacity:0.5,
+            fillColor:'rgba(0,0,255,1)',
+            fillOpacity:0.5,
+            zIndex:10,
+            bubble:true,
+            cursor:'pointer',
+            clickable: true
+        })
+        circleMarker.setMap(map)
+
+
+    </script>
+</body>
+
+</html>

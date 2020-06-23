@@ -27,6 +27,7 @@ public class AirspaceController {
     @Resource
     private AirspaceService airspaceService;
 
+
     /**
      * 注册空域
      * @param airspace 空域详细信息

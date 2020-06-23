@@ -168,9 +168,17 @@
                     var task = result.object.records;
                     var str = "";
                     for (var i=0;i<task.length;i++) {
+                        var line = '是';
+                        var status = '已审批'
+                        if(task[i].withinLineOfSight == 0) {
+                            line = '否';
+                        }
+                        if(task[i].status == 0) {
+                            status = '未审批';
+                        }
                         var a = '<tr><td>'+task[i].id+'</td><td>'+task[i].taskName+'</td><td>'
-                        +task[i].natrueName+'</td><td>'+task[i].planStartTime+'</td><td>'+task[i].planEndTime+'</td><td>'+task[i].status+'</td><td>'
-                        +task[i].airspaceName+'</td><td>'+task[i].height+'</td><td>'+task[i].uavName+'</td><td>'+task[i].withinLineOfSight+'</td><td>'
+                        +task[i].natrueName+'</td><td>'+task[i].planStartTime+'</td><td>'+task[i].planEndTime+'</td><td>'+status+'</td><td>'
+                        +task[i].airspaceName+'</td><td>'+task[i].height+'</td><td>'+task[i].uavName+'</td><td>'+line+'</td><td>'
                         +task[i].description+'</td><td class="td-manage"><a title="查看" onclick="xadmin.open(\'编辑\',\'order-view.html\')" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a><a title="删除" onclick="member_del(this,\'要删除的id\')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a></td></tr>'
                         str+= a;
                     }

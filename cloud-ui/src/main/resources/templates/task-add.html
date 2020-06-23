@@ -13,6 +13,7 @@
         <link rel="stylesheet" th:href="@{/css/xadmin.css}">
         <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+        <script th:src="@{/js/xm-select.js}" charset="utf-8"></script>
         <link rel="stylesheet" th:href="@{/css/font.css}">
         <!--[if lt IE 9]>
         <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
@@ -24,54 +25,54 @@
             <div class="layui-row">
                 <form class="layui-form">
                     <div class="layui-form-item">
-                        <label for="taskname" class="layui-form-label">
+                        <label for="taskName" class="layui-form-label">
                             <span class="x-red">*</span>计划名称</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="taskname" name="taskname" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                            <input type="text" id="taskName" name="taskName" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="natrueName" class="layui-form-label">
+                        <label for="taskNatureId" class="layui-form-label">
                             <span class="x-red">*</span>计划类型</label>
                         <div class="layui-input-inline" id="natrue">
-                            <select id="natrueName" name="natrueName" class="valid">
+                            <select id="taskNatureId" name="taskNatureId" class="valid">
 
                             </select>
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="start" class="layui-form-label"><span class="x-red">*</span>预计开始时间</label>
+                        <label for="planStartTime" class="layui-form-label"><span class="x-red">*</span>预计开始时间</label>
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="开始时间" name="start" id="start">
+                            <input class="layui-input" placeholder="开始时间" name="planStartTime" id="planStartTime">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="end" class="layui-form-label"><span class="x-red">*</span>预计结束时间</label>
+                        <label for="planEndTime" class="layui-form-label"><span class="x-red">*</span>预计结束时间</label>
                         <div class="layui-input-inline layui-show-xs-block">
-                            <input class="layui-input" placeholder="结束时间" name="end" id="end">
+                            <input class="layui-input" placeholder="结束时间" name="planEndTime" id="planEndTime">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="airspace" class="layui-form-label">
+                        <label for="airspaceId" class="layui-form-label">
                             <span class="x-red">*</span>关联空域</label>
-                        <div class="layui-input-inline">
-                            <select id="airspace" name="airspace" class="valid"></select>
+                        <div class="layui-input-inline" id="airspaceId" name="airspaceId">
+<!--                            <select multiple id="airspaceId" name="airspaceId" class="valid"></select>-->
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="uav" class="layui-form-label">
+                        <label for="uavId" class="layui-form-label">
                             <span class="x-red">*</span>执行无人机</label>
                         <div class="layui-input-inline">
-                            <select name="uav" id="uav"></select>
+                            <select name="uavId" id="uavId"></select>
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="inline" class="layui-form-label">
+                        <label for="withinLineOfSight" class="layui-form-label">
                             <span class="x-red">*</span>在视线内飞行</label>
                         <div class="layui-input-inline">
-                            <select name="inline" id="inline">
+                            <select name="withinLineOfSight" id="withinLineOfSight">
                                 <option>请选择</option>
                                 <option value="1">是</option>
-                                <option value="0">否</option></select>
+                                <option value="0">否</option>
                             </select>
 
                         </div>
@@ -87,9 +88,9 @@
                     </div>
 
         <div class="layui-form-item layui-form-text">
-            <label for="desc" class="layui-form-label">描述</label>
+            <label for="description" class="layui-form-label">描述</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入内容" id="desc" name="desc" class="layui-textarea"></textarea>
+                <textarea placeholder="请输入内容" id="description" name="description" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -99,17 +100,18 @@
         </div>
         </div>
         <script>
+            var a;
             layui.use(['form', 'layer','laydate'],
             function() {
                 var laydate = layui.laydate;
                 //执行一个laydate实例
                 laydate.render({
-                    elem: '#start' //指定元素
+                    elem: '#planStartTime' //指定元素
                     ,type: 'datetime'
                 });
                 //执行一个laydate实例ju 9g
                 laydate.render({
-                    elem: '#end' //指定元素
+                    elem: '#planEndTime' //指定元素
                     ,type: 'datetime'
                 });
 
@@ -123,18 +125,43 @@
                 //监听提交
                 form.on('submit(add)',
                 function(data) {
-                    console.log(data.field);
-                    //发异步，把数据提交给php
-
-                    layer.alert("增加成功", {
-                        icon: 6
-                    },
-                    function() {
-                        // 获得frame索引
-                        var index = parent.layer.getFrameIndex(window.name);
-                        //关闭当前frame
-                        parent.layer.close(index);
+                    data.field.airspaceId = a.getValue('value');
+                    //发异步，把数据提交给后端
+                    $.ajax({
+                        type:'post',
+                        url:"http://localhost:9001/consumer/task/createPlan",
+                        headers: {
+                            Authorization: localStorage.Authorization
+                        },
+                        data:JSON.stringify(data.field), //将对象转为为json字符串
+                        dataType:"json",
+                        contentType:"application/json", //这个必须，不然后台接受时会出现乱码现象
+                        success:function(result) {
+                            if (result.code == 200) {
+                                layer.alert("增加成功", {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        // 获得frame索引
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        //关闭当前frame
+                                        parent.layer.close(index);
+                                    });
+                                initdata();
+                            }else {
+                                layer.alert(result.msg, {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        // 获得frame索引
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        //关闭当前frame
+                                        parent.layer.close(index);
+                                    });
+                            }
+                        }
                     });
+
                     return false;
                 });
 
@@ -152,10 +179,10 @@
                                 for (var i = 0; i < data.length; i++) {
                                     str += '<option value="' + data[i].taskNatrueId + '">' + data[i].taskNatrueName + '</option>'
                                 }
-                                $("#natrueName").html(str);
+                                $("#taskNatureId").html(str);
                                 form.render('select');
                             }else {
-                                alert(result.msg);
+                                layer.alert(result.msg);
                             }
                         }
                     })
@@ -172,10 +199,10 @@
                                 for (var i = 0; i < data.length; i++) {
                                     str += '<option value="' + data[i].id + '">' + data[i].nickname + '</option>'
                                 }
-                                $("#uav").html(str);
+                                $("#uavId").html(str);
                                 form.render('select');
                             }else {
-                                alert(result.msg);
+                                layer.alert(result.msg);
                             }
                         }
                     })
@@ -188,14 +215,23 @@
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
-                                var str = '<option>请选择</option>';
+                                // var str = '<option>请选择</option>';
+                                // for(var i=0;i<data.length;i++) {
+                                //     str += '<option value="'+data[i].id+'">'+data[i].airspaceName+'</option>'
+                                // }
+                                var cars=new Array();
                                 for(var i=0;i<data.length;i++) {
-                                    str += '<option value="'+data[i].id+'">'+data[i].airspaceName+'</option>'
+                                    cars[i] = {value:data[i].id,name:data[i].airspaceName}
                                 }
-                                $("#airspace").html(str);
+                                // $("#airspaceId").html(str);
+                                a=xmSelect.render({
+                                    el: '#airspaceId',
+                                    language: 'zn',
+                                    data: cars
+                                })
                                 form.render('select');
                             }else {
-                                alert(result.msg);
+                                layer.alert(result.msg);
                             }
                         }
                     })
