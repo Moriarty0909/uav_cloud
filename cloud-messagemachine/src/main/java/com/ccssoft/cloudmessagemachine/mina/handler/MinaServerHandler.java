@@ -19,7 +19,8 @@ import java.net.InetSocketAddress;
  */
 @Slf4j
 public class MinaServerHandler extends IoHandlerAdapter {
-    private Jedis jedis = new Jedis("183.56.219.211",6379);
+
+    private Jedis jedis = new Jedis("183.56.219.211",16379);
     /**
      * 会话创建
      * @param session
@@ -103,7 +104,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
         WebsocketService websocketService = new WebsocketService();
         //暂时先只发位置过去就行
         if ("UD".equals(messageWeNeed.getType())) {
-            websocketService.sendMessageAll(messageWeNeed.getId()+":"+messageWeNeed.getCoordinate()+",speed:"+messageWeNeed.getSpeed()+"km/h,height:"+messageWeNeed.getAltitude()+",power:"+messageWeNeed.getBattery()+"%");
+            websocketService.sendMessageAll(messageWeNeed.getId()+":"+messageWeNeed.getCoordinate()+":"+messageWeNeed.getSpeed()+":"+messageWeNeed.getAltitude()+":"+messageWeNeed.getBattery());
         }
 
         savaData(messageWeNeed);

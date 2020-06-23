@@ -24,13 +24,14 @@
         $(document).ready(function () {
             var socket;
 
-            socket = new WebSocket("ws://183.56.219.211:8002/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
+            socket = new WebSocket("ws://localhost:10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
             //打开事件
             socket.onopen = function() {
                 alert("Socket 已打开");
             };
             //关闭事件
             socket.onclose = function() {
+
                 alert("Socket已关闭");
             };
             //发生了错误事件
@@ -40,22 +41,16 @@
 
             //获得消息事件
             socket.onmessage = function(msg) {
-                var message = msg.data;
+                const message = msg.data;
                 console.log("这是接收到的信息："+message);
-                var data = message.split(":");
+                const data = message.split(":")
                 if (data[1] == "offline") {
-                    $("#"+data[0]).remove();
+                    alert("关机了")
+                //     关机了
                 } else {
-                    var id = message.split(":",1);
-                    var a = $("#show div");
-                    for (var i = 0;i<a.length;i++) {
-                        var id1 = $(a[i]).attr("id");
-                        if (id1 == id) {
-                            $("#"+id).text(message);
-                            return;
-                        }
-                    }
-                    $("#show").append("<div id="+id+">"+message+"</div>");
+                    const id = data[0];
+                    const point = data[1];
+                    myMap.set(id,point);
                 }
 
             };
@@ -72,22 +67,41 @@
             map.addControl(new AMap.OverView({isOpen:true}));
         });
 
-        var circleMarker = new AMap.CircleMarker({
-            center:[108.314614,22.827239],
-            radius:9,// 圆半径
-            strokeColor:'white',
-            strokeWeight:2,
-            strokeOpacity:0.5,
-            fillColor:'rgba(0,0,255,1)',
-            fillOpacity:0.5,
-            zIndex:10,
-            bubble:true,
-            cursor:'pointer',
-            clickable: true
-        })
-        circleMarker.setMap(map)
+        setInterval("sign()",3000);
 
+        var list = [];
+        function sign() {
+            map.remove(list);
+            for (var j=0;j<list.length;j++){
+                list.pop();
+            }
+            let mapIter = myMap.values();
+            for (var i = 0,circleMarker;i<myMap.size;i++) {
+                var data = mapIter.next().value;
+                // console.log("data="+data);
+                // console.log("data1="+data.split(",")[1]);
+                // console.log("data2="+data.split(",")[0]);
+                var a = [];
+                a[0] = data.split(",")[1];//108.314614;
+                a[1] = data.split(",")[0];//22.827239;
 
+                circleMarker = new AMap.CircleMarker({
+                    center:a,//mapIter.next().value,
+                    radius:8,// 圆半径
+                    strokeColor:'white',
+                    strokeWeight:2,
+                    strokeOpacity:0.5,
+                    fillColor:'rgba(0,0,255,1)',
+                    fillOpacity:0.5,
+                    zIndex:10,
+                    bubble:true,
+                    cursor:'pointer',
+                    clickable: true
+                })
+                circleMarker.setMap(map)
+                list.push(circleMarker);
+            }
+        }
     </script>
 </body>
 

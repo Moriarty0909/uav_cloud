@@ -34,7 +34,7 @@ public class ComonUtils {
             String s1 = Integer.parseInt(s) + 8 + ":" + t2.charAt(2) + t2.charAt(3) +":"+ t2.charAt(4) + t2.charAt(5);
             Timestamp time = Timestamp.valueOf("20"+data+" "+s1);
 //            AltitudeUtil.SelectAltitude(Double.valueOf(split[6]),Double.valueOf(split[4]));
-            Message message = new Message(id,type,"["+split[4]+" "+split[6]+"]",split[3],split[8],split[9],split[10],split[13],time,"");
+            Message message = new Message(id,type,split[4]+","+split[6],split[3],split[8],split[9],split[10],split[13],time,"");
             return message;
         } else if ("LK]".equals(type) || "LK".equals(type)) {
             session.write("[3G*"+id+"*0002*LK]");
