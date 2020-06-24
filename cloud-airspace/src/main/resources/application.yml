@@ -4,7 +4,7 @@ spring:
   application:
     name: airspace-server
   datasource:
-    url: jdbc:mysql://183.56.219.211:33066/uav_cloud?useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://183.56.219.211:33066/uav_cloud?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456

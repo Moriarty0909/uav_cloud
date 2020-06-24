@@ -10,6 +10,7 @@
         <link rel="stylesheet" th:href="@{/css/font.css}">
         <link rel="stylesheet" th:href="@{/css/xadmin.css}">
         <!-- <link rel="stylesheet" href="./css/theme5.css"> -->
+        <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
     </head>
@@ -161,13 +162,13 @@
                             <cite>计划管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
-                            <li>
-                                <a onclick="xadmin.add_tab('计划列表','task-list')">
+                            <li name="guess">
+                                <a onclick="xadmin.add_tab('计划列表','task-list-guess')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>计划列表</cite></a>
                             </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('计划列表','cate.html')">
+                            <li name="admin">
+                                <a onclick="xadmin.add_tab('计划列表','task-list-admin')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>计划列表</cite></a>
                             </li>
@@ -184,24 +185,24 @@
                             <cite>空域管理</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
-                            <li>
+                            <li name="guess">
                                 <a onclick="xadmin.add_tab('空域列表','order-list.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>空域列表</cite></a>
                             </li>
-                            <li>
+                            <li name="admin">
                                 <a onclick="xadmin.add_tab('待审批空域列表','cate.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>待审批空域列表</cite></a>
                             </li>
-                            <li>
+                            <li name="guess">
                                 <a onclick="xadmin.add_tab('申请空域','order-add.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>申请空域</cite></a>
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li name="admin">
                         <a href="javascript:;">
                             <i class="iconfont left-nav-li" lay-tips="单位管理">&#xe726;</i>
                             <cite>单位管理</cite>
@@ -214,7 +215,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li name="admin">
                         <a href="javascript:;">
                             <i class="iconfont left-nav-li" lay-tips="数据管理">&#xe757;</i>
                             <cite>数据管理</cite>
@@ -226,7 +227,7 @@
                                     <cite>统计页面</cite></a>
                             </li>
                             <li>
-                                <a onclick="xadmin.add_tab('实时轨迹','welcome1.html')">
+                                <a onclick="xadmin.add_tab('实时轨迹','task-map')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>实时轨迹</cite></a>
                             </li>
@@ -421,13 +422,17 @@
         <style id="theme_style"></style>
         <!-- 右侧主体结束 -->
         <!-- 中部结束 -->
-        <script>//百度统计可去掉
-            var _hmt = _hmt || []; (function() {
-                var hm = document.createElement("script");
-                hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-                var s = document.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(hm, s);
-            })();</script>
+        <script>
+            layui.use([],
+                function() {
+                   if((window.atob(localStorage.Authorization.split(".")[1])).split(":")[5] === '"ROLE_ADMIN"}') {
+                       $("li[name='guess']").attr('style','display:none');
+
+                   } else {
+                       $("li[name='admin']").attr('style','display:none');
+                   }
+                });
+        </script>
     </body>
 
 </html>

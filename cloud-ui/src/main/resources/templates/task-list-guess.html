@@ -136,11 +136,24 @@
             layer.confirm('确认要删除吗？',
             function(index) {
                 //发异步删除数据
-                $(obj).parents("tr").remove();
-                layer.msg('已删除!', {
-                    icon: 1,
-                    time: 1000
-                });
+                $.ajax({
+                    type: 'get',
+                    headers: {
+                        Authorization: localStorage.Authorization
+                    },
+                    url: "http://localhost:9001/consumer/task/deletePlan/" + id,
+                    success: function (result) {
+                        if (result.code == 200) {
+                            $(obj).parents("tr").remove();
+                            layer.msg('已删除!', {
+                                icon: 1,
+                                time: 1000
+                            });
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    }
+                })
             });
         }
         //批量删除
@@ -156,8 +169,10 @@
             });
         }
 
-        var current = 0;
+        var current1 = 0;
+
         function getData(current) {
+            current1 = current;
             $.ajax({
                 type: 'get',
                 headers: {
@@ -179,11 +194,14 @@
                         var a = '<tr><td>'+task[i].id+'</td><td>'+task[i].taskName+'</td><td>'
                         +task[i].natrueName+'</td><td>'+task[i].planStartTime+'</td><td>'+task[i].planEndTime+'</td><td>'+status+'</td><td>'
                         +task[i].airspaceName+'</td><td>'+task[i].height+'</td><td>'+task[i].uavName+'</td><td>'+line+'</td><td>'
-                        +task[i].description+'</td><td class="td-manage"><a title="查看" onclick="xadmin.open(\'编辑\',\'order-view.html\')" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a><a title="删除" onclick="member_del(this,\'要删除的id\')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a></td></tr>'
+                        +task[i].description+'</td><td class="td-manage"><a title="查看" onclick="edit('+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a><a title="删除" onclick="member_del(this,'+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a></td></tr>'
                         str+= a;
                     }
                     $("#tasktable").html(str);
+
                     current = result.object.current;
+                    $("#before").removeAttr("style");
+                    $("#after").removeAttr("style");
                     if (current == 1 && current == result.object.pages) {
                         $("#before").attr("style","display:none;");
                         $("#current").text(current);
@@ -206,17 +224,21 @@
                         $("#total").text(result.object.pages);
                     }
 
-
                 }
             })
         }
 
         function forword() {
-            alert(1111)
+            getData(current1-1);
         }
 
         function backward() {
+            getData(current1+1);
+        }
 
+        function edit(id) {
+            localStorage.setItem("taskid",id)
+            xadmin.open('编辑','task-edit')
         }
     </script>
 

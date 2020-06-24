@@ -52,6 +52,14 @@ public interface TaskService {
     R deletePlan (@PathVariable("id") Long taskId);
 
     /**
+     * 远程调用飞行计划模块的获取单个飞行计划详情功能
+     * @param taskId 飞行计划id
+     * @return R
+     */
+    @GetMapping("/task/getPlan/{id}")
+    R getPlan (@PathVariable("id") Long taskId);
+
+    /**
      * 远程调用飞行计划模块的根据飞机计划id查找其对应的空域详情功能
      * @param taskId 飞机计划id
      * @return 空域详情

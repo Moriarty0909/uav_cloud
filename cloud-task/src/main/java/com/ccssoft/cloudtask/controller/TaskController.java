@@ -2,6 +2,7 @@ package com.ccssoft.cloudtask.controller;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -114,6 +115,28 @@ public class TaskController {
     }
 
     /**
+     * 根据飞行计划id获取飞行计划详情
+     * @param taskId 飞行计划id
+     * @return
+     */
+    @GetMapping("/getPlan/{id}")
+    public R getPlan (@PathVariable("id") Long taskId) {
+        log.info("TaskController.getPlan(),参数={}",taskId);
+        String numId = String.valueOf(taskId);
+//        if(bloomFilter.isExist(numId)) {
+//            return R.error(301,"无此飞行计划");
+//        }
+        numId = "taskById"+taskId;
+        if (redisUtil.get(numId) == null) {
+            Task task = taskService.getById(taskId);
+            redisUtil.set(numId,task);
+            return R.ok(task);
+        }
+        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(numId));
+        return R.ok(jsonObject.toBean(Task.class));
+    }
+
+    /**
      * 根据飞机计划id查找其对应的空域详情
      * @param taskId 飞机计划id
      * @return 空域详情
@@ -203,6 +226,7 @@ public class TaskController {
             BeanUtils.copyProperties(task,taskVo);
             //获取空域的名称
             ArrayList airspaceIdByTaskId = taskService.getAirspaceIdByTaskId(task.getId());
+
             List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(airspaceIdByTaskId);
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
@@ -230,6 +254,7 @@ public class TaskController {
         Page<TaskVo> pageNeed = new Page<>();
         BeanUtils.copyProperties(page,pageNeed);
         pageNeed.setRecords(list);
+
         return pageNeed;
     }
 

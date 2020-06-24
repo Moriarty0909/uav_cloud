@@ -26,13 +26,12 @@ public class RedisDataInit {
     @Resource
     private TaskDao taskDao;
 
-    @Resource
-    private TaskAirspaceDao taskAirspaceDao;
 
     @PostConstruct
     public void init () {
         List<Task> tasks = taskDao.selectList(null);
         for (Task task : tasks) {
+            System.out.println(task.getId());
             redisBloomFilter.put(String.valueOf(task.getId()));
         }
 

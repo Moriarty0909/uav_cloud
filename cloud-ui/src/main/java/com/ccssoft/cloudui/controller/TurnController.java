@@ -24,13 +24,28 @@ public class TurnController {
         return "welcome";
     }
 
-    @GetMapping("/turn/task-list")
-    public String taskList () {
-        return "task-list";
+    @GetMapping("/turn/task-list-guess")
+    public String taskListGuess () {
+        return "task-list-guess";
+    }
+
+    @GetMapping("/turn/task-list-admin")
+    public String taskListAdmin () {
+        return "task-list-admin";
     }
 
     @GetMapping("/turn/task-add")
     public String taskAdd () {
         return "task-add";
+    }
+
+    @GetMapping("/turn/task-map")
+    public String taskMap () {
+        return "task-map";
+    }
+
+    @GetMapping("/turn/task-edit")
+    public String taskEdit () {
+        return "task-edit";
     }
 }

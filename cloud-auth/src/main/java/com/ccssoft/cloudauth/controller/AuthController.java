@@ -167,7 +167,7 @@ public class AuthController {
         return taskService.updateInfo(task);
     }
 
-    @ApiOperation("更新飞行计划信息，批准之前可以修改，之后不能再修改。")
+    @ApiOperation("批准飞行计划")
     @GetMapping("/consumer/task/approvalTask/{id}")
     public R approvalTask(@ApiParam("飞行计划的id") @PathVariable("id") Long taskId) {
         return taskService.approval(taskId);
@@ -178,6 +178,13 @@ public class AuthController {
     public R deletePlan(@ApiParam("飞行计划的id") @PathVariable("id") Long taskId) {
         return taskService.deletePlan(taskId);
     }
+
+    @ApiOperation("获取单个飞行计划详情，以供更改飞行计划时获取原始数据")
+    @GetMapping("/consumer/task/getPlan/{id}")
+    public R getPlan(@ApiParam("飞行计划的id") @PathVariable("id") Long taskId) {
+        return taskService.getPlan(taskId);
+    }
+
 
     @ApiOperation("获取飞行计划对应的空域详情，以供展示页能获取到该任务对应的空域名称与点击之后的详情")
     @GetMapping("/consumer/task/getAirspaceByTaskId/{id}")

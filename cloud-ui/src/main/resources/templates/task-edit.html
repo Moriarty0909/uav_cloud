@@ -121,6 +121,7 @@
                 //自定义验证规则
 
                 initdata();
+                getData();
 
                 //监听提交
                 form.on('submit(add)',
@@ -234,6 +235,19 @@
                             }
                         }
                     })
+
+                }
+                function getData() {
+                    $.ajax({
+                        type: 'get',
+                        headers: {
+                            Authorization: localStorage.Authorization
+                        },
+                        url: "http://localhost:9001/consumer/task/getPlan/" + localStorage.taskid,
+                        success: function (result) {
+                            alert(JSON.stringify(result));
+                        }
+                    });
                 }
 
 
