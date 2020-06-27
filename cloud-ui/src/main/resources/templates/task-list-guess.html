@@ -194,7 +194,7 @@
                         var a = '<tr><td>'+task[i].id+'</td><td>'+task[i].taskName+'</td><td>'
                         +task[i].natrueName+'</td><td>'+task[i].planStartTime+'</td><td>'+task[i].planEndTime+'</td><td>'+status+'</td><td>'
                         +task[i].airspaceName+'</td><td>'+task[i].height+'</td><td>'+task[i].uavName+'</td><td>'+line+'</td><td>'
-                        +task[i].description+'</td><td class="td-manage"><a title="查看" onclick="edit('+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a><a title="删除" onclick="member_del(this,'+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a></td></tr>'
+                        +task[i].description+'</td><td class="td-manage"><a title="修改" onclick="edit('+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe63c;</i></a><a title="删除" onclick="member_del(this,'+task[i].id+')" href="javascript:;"><i class="layui-icon">&#xe640;</i></a></td></tr>'
                         str+= a;
                     }
                     $("#tasktable").html(str);

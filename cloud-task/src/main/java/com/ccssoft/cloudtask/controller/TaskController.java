@@ -123,17 +123,18 @@ public class TaskController {
     public R getPlan (@PathVariable("id") Long taskId) {
         log.info("TaskController.getPlan(),参数={}",taskId);
         String numId = String.valueOf(taskId);
-//        if(bloomFilter.isExist(numId)) {
-//            return R.error(301,"无此飞行计划");
-//        }
-        numId = "taskById"+taskId;
-        if (redisUtil.get(numId) == null) {
+        if(!bloomFilter.isExist(numId)) {
+            return R.error(301,"无此飞行计划");
+        }
+        //因为当调用此数据的时候，是出现在需要修改计划信息的时候，所以改完之后还要刷新缓存里的数据，而且不是热点公共数据，所以不需要缓存。
+//        numId = "taskById"+taskId;
+//        if (redisUtil.get(numId) == null) {
             Task task = taskService.getById(taskId);
             redisUtil.set(numId,task);
             return R.ok(task);
-        }
-        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(numId));
-        return R.ok(jsonObject.toBean(Task.class));
+//        }
+//        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(numId));
+//        return R.ok(jsonObject.toBean(Task.class));
     }
 
     /**

@@ -55,7 +55,6 @@
                         <label for="airspaceId" class="layui-form-label">
                             <span class="x-red">*</span>关联空域</label>
                         <div class="layui-input-inline" id="airspaceId" name="airspaceId">
-<!--                            <select multiple id="airspaceId" name="airspaceId" class="valid"></select>-->
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -71,8 +70,8 @@
                         <div class="layui-input-inline">
                             <select name="withinLineOfSight" id="withinLineOfSight">
                                 <option>请选择</option>
-                                <option value="1">是</option>
-                                <option value="0">否</option>
+                                <option value="1" id="yes">是</option>
+                                <option value="0" id="no">否</option>
                             </select>
 
                         </div>
@@ -116,9 +115,8 @@
                 });
 
                 $ = layui.jquery;
-                var form = layui.form,
-                layer = layui.layer;
-                //自定义验证规则
+                const form = layui.form,
+                    layer = layui.layer;
 
                 initdata();
                 getData();
@@ -245,7 +243,21 @@
                         },
                         url: "http://localhost:9001/consumer/task/getPlan/" + localStorage.taskid,
                         success: function (result) {
-                            alert(JSON.stringify(result));
+                            if (result.code == 200) {
+                                $("#taskName").val(result.object.taskName);
+                                $("#height").val(result.object.height)
+                                $("#description").val(result.object.description);
+                                if (result.object.withinLineOfSight ==1) {
+                                    $("#yes").attr("selected","selected");
+                                }else {
+                                    $("#no").attr("selected","selected");
+                                }
+
+                                $("[value="+result.object.taskNatureId+"]").attr("selected","selected");
+                                $("[value="+result.object.uavId+"]").attr("selected","selected");
+                                form.render('select');
+                            }
+                            console.log(JSON.stringify(result));
                         }
                     });
                 }

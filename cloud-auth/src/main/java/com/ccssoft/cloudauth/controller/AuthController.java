@@ -182,6 +182,7 @@ public class AuthController {
     @ApiOperation("获取单个飞行计划详情，以供更改飞行计划时获取原始数据")
     @GetMapping("/consumer/task/getPlan/{id}")
     public R getPlan(@ApiParam("飞行计划的id") @PathVariable("id") Long taskId) {
+        System.out.println("传过来的id有问题="+taskId);
         return taskService.getPlan(taskId);
     }
 
