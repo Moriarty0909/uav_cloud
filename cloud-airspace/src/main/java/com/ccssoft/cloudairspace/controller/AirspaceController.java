@@ -73,6 +73,17 @@ public class AirspaceController {
         return R.ok(airspaceService.getAllAirspaceNotAllow(current,size));
     }
 
+    /**
+     * 获取所有待审批的空域
+     * @param current 当前页数
+     * @param size 每页数据量
+     * @return R
+     */
+    @GetMapping("/getAirspaceByUserId4Page/{current}&{size}")
+    public R getAirspaceByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size,@PathVariable("id") Long userId) {
+        log.info("AirspaceController.getAirspaceByUserId4Page(),参数：当前页数={},每页数量={},用户id={}",current,size,userId);
+        return R.ok(airspaceService.getAirspaceByUserId4Page(current,size,userId));
+    }
 
     /**
      * 批量查询符合条件的所有空域，直接查出和此用户相关的空域

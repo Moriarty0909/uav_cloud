@@ -15,6 +15,7 @@ import com.ccssoft.cloudairspace.service.AirspaceService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ccssoft.cloudairspace.util.RedisUtil;
 import com.ccssoft.cloudcommon.entity.Airspace;
+import com.ccssoft.cloudcommon.entity.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -172,6 +173,25 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
         wrapper.eq("status",1);
         return airspaceDao.selectCount(wrapper);
+    }
+
+    @Override
+    public Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId) {
+        List list = getAirspaceIdsByUserId(userId);
+        Page<Airspace> page = new Page<>(current,size);
+//        if (redisUtil.get("airBy"+userId) == null) {
+            List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
+
+            QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+            wrapper.in("id",list);
+        Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
+//            redisUtil.set("airBy"+userId,airspacePage,6000);
+            return airspacePage;
+//        }
+
+//        List result = JSONUtil.parseArray(redisUtil.get("airBy"+userId));
+
+//        return result;
     }
 
     private List<Long> getAirspaceIdsByUserId (Long userId) {

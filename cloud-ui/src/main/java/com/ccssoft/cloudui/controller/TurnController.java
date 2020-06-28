@@ -48,4 +48,15 @@ public class TurnController {
     public String taskEdit () {
         return "task-edit";
     }
+
+    @GetMapping("/turn/airspace-list-guess")
+    public String airspaceListGuess () {
+        return "airspace-list-guess";
+    }
+
+    @GetMapping("/turn/airspace-list-admin")
+    public String airspaceListAdmin () {
+        return "airspace-list-admin";
+    }
+
 }

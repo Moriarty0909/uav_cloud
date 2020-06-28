@@ -85,4 +85,6 @@ public interface AirspaceService extends IService<Airspace> {
      * @return 数量
      */
     Integer getApprovaledCount();
+
+    Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId);
 }

@@ -53,4 +53,12 @@
         #{item}
     </foreach>
     </select>
+
+    <select id="getAirspaceListByIdList4Page" resultType="com.ccssoft.cloudcommon.entity.Airspace">
+        select id,airspace_name,ST_AsText(airspace_point) as airspace_point,start_time,end_time from airspace
+        where status = 1 and
+        id IN <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+        #{item}
+        LIMIT #{current},#{size}
+    </select>
 </mapper>
