@@ -1,12 +1,21 @@
-<!doctype html>
-<html>
+<!doctype html >
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <title>鼠标拾取地图坐标</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=1c1fd3322a658a9a2fa80d562830e60c&plugin=AMap.MouseTool"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
     <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <script type="text/javascript" th:src="@{/js/noflyzone.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/xadmin.css}">
+    <script src='https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js'></script>
+
+    <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
 </head>
 <style type="text/css">
     html,body{
@@ -37,12 +46,14 @@
     </div>
 
 </div>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=1c1fd3322a658a9a2fa80d562830e60c&plugin=AMap.MouseTool"></script>
 <script type="text/javascript">
-    var map = new AMap.Map("container", {
-        resizeEnable: true
-    });
 
+    var line = [];
+    var map = new AMap.Map("container", {
+        zoom:8,//级别
+        center: [108.314614,22.827239],//中心点坐标
+    });
+    showNoflyZone();
     var mouseTool = new AMap.MouseTool(map);
     //监听draw事件可获取画好的覆盖物
     var overlays = [];
@@ -50,22 +61,32 @@
         overlays.push(e.obj);
     })
     map.on('click', function(e) {
-        alert(e.lnglat.getLng() + ',' + e.lnglat.getLat());
+        line.push(e.lnglat.getLng() + ' ' + e.lnglat.getLat())
     });
 
-    function draw(){
-        mouseTool.polygon({
-            fillColor:'#00b0ff',
-            strokeColor:'#80d8ff'
-            //同Polygon的Option设置
-        });
-    }
-
-    draw()
+    mouseTool.polygon({
+        fillColor:'#00b0ff',
+        strokeColor:'#80d8ff'
+    });
 
     document.getElementById('clear').onclick = function(){
         map.remove(overlays)
         overlays = [];
+    }
+    document.getElementById('submit').onclick = function(){
+        localStorage.line = line;
+        if (sessionStorage.flag == 1) {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        } else {
+            xadmin.open('空域信息','airspace-add');
+        }
+
+    }
+    function closeSelf(){
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+        window.parent.getData(localStorage.current);
     }
 </script>
 </body>

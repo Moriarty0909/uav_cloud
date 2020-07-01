@@ -15,6 +15,7 @@
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <link rel="stylesheet" th:href="@{/css/font.css}">
         <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
         <!--[if lt IE 9]>
         <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
         <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -150,7 +151,7 @@
                             headers: {
                                 Authorization: localStorage.Authorization
                             },
-                            url: "http://localhost:9001/consumer/task/approvalTask/"+switch_goods_id,
+                            url: ip+"/consumer/task/approvalTask/"+switch_goods_id,
                             success: function (result) {
                                 if (result.code == 200) {
                                     data.elem.checked = checked;
@@ -183,7 +184,7 @@
                     headers: {
                         Authorization: localStorage.Authorization
                     },
-                    url: "http://localhost:9001/consumer/task/getAllTask4Page/"+current +"&10",
+                    url: ip+"/consumer/task/getAllTask4Page/"+current +"&10",
                     success: function (result) {
                         var task = result.object.records;
                         var str = "";

@@ -19,6 +19,8 @@ import com.ccssoft.cloudcommon.entity.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,10 +92,17 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
     }
 
     @Override
-    public List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, Date date) {
+    public List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, String date) {
         //TODO 思考下怎么复用好
         List list = getAirspaceIdsByUserId(userId);
-        return airspaceDao.getAirspaceListByIdListAndTime(list,date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date1 = null;
+        try {
+            date1 = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return airspaceDao.getAirspaceListByIdListAndTime(list,date1);
     }
 
     @Override
@@ -157,6 +166,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public int updateAirSpace(Airspace airspace) {
+        //TODO 还需要处理一下redis缓存
         airspace.setStatus(0);
         return airspaceDao.updateInfo(airspace);
     }
@@ -177,21 +187,15 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId) {
+        //还是不加缓存了，不然还要处理新增的问题，而这个列表还是经常新增的。
         List list = getAirspaceIdsByUserId(userId);
         Page<Airspace> page = new Page<>(current,size);
-//        if (redisUtil.get("airBy"+userId) == null) {
-            List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
-
-            QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
-            wrapper.in("id",list);
+        List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
+        QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+        wrapper.in("id",list);
         Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
-//            redisUtil.set("airBy"+userId,airspacePage,6000);
-            return airspacePage;
-//        }
-
-//        List result = JSONUtil.parseArray(redisUtil.get("airBy"+userId));
-
-//        return result;
+        airspacePage.setRecords(airspaceList);
+        return airspacePage;
     }
 
     private List<Long> getAirspaceIdsByUserId (Long userId) {
@@ -201,20 +205,14 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             return null;
         }
 
-        if (redisUtil.get("airidBy"+numId) == null) {
-            QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
-            wrapper.eq("user_id",userId);
-            List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
+        QueryWrapper<UserAirspace> wrapper = new QueryWrapper();
+        wrapper.eq("user_id",userId);
+        List<UserAirspace> userAirspaces = userAirspaceDao.selectList(wrapper);
 
-            List<Long> list = new ArrayList();
-            for (UserAirspace userAirspace : userAirspaces) {
-                list.add(userAirspace.getAirspaceId());
-            }
-            redisUtil.set("airidBy"+numId,list);
-            return list;
+        List<Long> list = new ArrayList();
+        for (UserAirspace userAirspace : userAirspaces) {
+            list.add(userAirspace.getAirspaceId());
         }
-
-        List list = JSONUtil.parseArray(redisUtil.get("airidBy"+numId));
         return list;
     }
 }

@@ -59,6 +59,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskDao, Task> implements TaskS
 
     @Override
     public ArrayList getAirspaceIdByTaskId(Long taskId) {
+
         String numId = ""+taskId;
         if (!bloomFilter.isExist(numId)) {
             return null;

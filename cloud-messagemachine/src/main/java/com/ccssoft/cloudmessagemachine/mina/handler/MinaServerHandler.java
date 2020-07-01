@@ -107,7 +107,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
             websocketService.sendMessageAll(messageWeNeed.getId()+":"+messageWeNeed.getCoordinate()+":"+messageWeNeed.getSpeed()+":"+messageWeNeed.getAltitude()+":"+messageWeNeed.getBattery());
         }
 
-        savaData(messageWeNeed);
+//        savaData(messageWeNeed);
         // 给客户端返回数据
 //        session.write();
     }

@@ -74,12 +74,12 @@ public class AirspaceController {
     }
 
     /**
-     * 获取所有待审批的空域
+     * 获取有关用户id的空域数据以分页的形式
      * @param current 当前页数
      * @param size 每页数据量
      * @return R
      */
-    @GetMapping("/getAirspaceByUserId4Page/{current}&{size}")
+    @GetMapping("/getAirspaceByUserId4Page/{current}&{size}&{id}")
     public R getAirspaceByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size,@PathVariable("id") Long userId) {
         log.info("AirspaceController.getAirspaceByUserId4Page(),参数：当前页数={},每页数量={},用户id={}",current,size,userId);
         return R.ok(airspaceService.getAirspaceByUserId4Page(current,size,userId));
@@ -103,8 +103,8 @@ public class AirspaceController {
      * @param date 查出和此用户相关的空域并且还需要比对是否在空域使用时间的起始范围内
      * @return R
      */
-    @GetMapping("/getASByUserId/{id}&{time}")
-    public R getAirspaceByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date) {
+    @GetMapping("/getASByUserId1/{id}&{time}")
+    public R getAirspaceByUserId1 (@PathVariable("id") Long userId,@PathVariable("time") String date) {
 
         log.info("AirspaceController.getASByUserId(),参数={},{}",userId,date);
         List<Airspace> asByUserIdPremiseTime = airspaceService.getAirspaceByUserIdPremiseTime(userId, date);

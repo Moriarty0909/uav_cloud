@@ -219,7 +219,6 @@ public class TaskController {
             wrapper.in("uav_id",uavIds);
             taskService.page(page,wrapper);
         }
-
         //根据获得的计划数据进行拆分调用组装数据到vo里
         List<TaskVo> list = new ArrayList<>();
         for (Task task : page.getRecords()) {
@@ -227,7 +226,6 @@ public class TaskController {
             BeanUtils.copyProperties(task,taskVo);
             //获取空域的名称
             ArrayList airspaceIdByTaskId = taskService.getAirspaceIdByTaskId(task.getId());
-
             List<Airspace> airSpaceList = airspaceService.getAirspaceByAirspaceIds(airspaceIdByTaskId);
             List nameList = new ArrayList();
             for (Airspace airspace : airSpaceList) {
@@ -255,7 +253,6 @@ public class TaskController {
         Page<TaskVo> pageNeed = new Page<>();
         BeanUtils.copyProperties(page,pageNeed);
         pageNeed.setRecords(list);
-
         return pageNeed;
     }
 

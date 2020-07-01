@@ -12,6 +12,7 @@ import com.ccssoft.cloudcommon.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javafx.util.converter.DateStringConverter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -121,11 +122,18 @@ public class AuthController {
         return airspaceService.getAllAirspaceNotAllow(current,size);
     }
 
-    @ApiOperation("通过用户id获取其相关的空域信息，以供创建飞行计划时提供可选的空域")
-    @GetMapping("/consumer/airspace/getAiarspaceByUserId/{id}&{time}")
-    public R getAiarspaceByUserId(@ApiParam("用户id") @PathVariable("id") Long userId ,
-                                  @ApiParam("飞行计划开始时间") @PathVariable("time") Date startTime) {
-        return airspaceService.getAirspaceByUserId(userId,startTime);
+    @ApiOperation("以分页形式获取对应userId的空域详情，以供列表展示。")
+    @GetMapping("/consumer/airspace/getAirspaceByUserId4Page/{current}&{size}&{id}")
+    public R getAirspaceByUserId4Page(@ApiParam("当前页数") @PathVariable("current") int current ,
+                                    @ApiParam("每页数据量") @PathVariable("size") int size,
+                                      @ApiParam("用户id")  @PathVariable("id") Long userId) {
+        return airspaceService.getAirspaceByUserId4Page(current,size,userId);
+    }
+
+    @ApiOperation("通过用户id获取其相关已获批的空域信息，以供创建飞行计划时提供可选的空域")
+    @GetMapping("/consumer/airspace/getAiarspaceByUserId1/{time}&{id}")
+    public R getAiarspaceByUserId1(@PathVariable("id") Long userId,@ApiParam("飞行计划开始时间") @PathVariable("time") String startTime) {
+        return airspaceService.getAirspaceByUserId1(userId,startTime);
     }
 
     @ApiOperation("通过用户id获取其相关的空域信息，以用户查看自己所拥有的所有空域")
@@ -182,10 +190,8 @@ public class AuthController {
     @ApiOperation("获取单个飞行计划详情，以供更改飞行计划时获取原始数据")
     @GetMapping("/consumer/task/getPlan/{id}")
     public R getPlan(@ApiParam("飞行计划的id") @PathVariable("id") Long taskId) {
-        System.out.println("传过来的id有问题="+taskId);
         return taskService.getPlan(taskId);
     }
-
 
     @ApiOperation("获取飞行计划对应的空域详情，以供展示页能获取到该任务对应的空域名称与点击之后的详情")
     @GetMapping("/consumer/task/getAirspaceByTaskId/{id}")

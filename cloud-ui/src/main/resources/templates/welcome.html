@@ -10,6 +10,7 @@
         <link rel="stylesheet" th:href="@{/css/xadmin.css}">
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
         <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
         <!--[if lt IE 9]>
         <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
@@ -101,14 +102,17 @@
                                             Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
                                             Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)</td></tr>
                                     <tr>
-                                        <th>PHP版本</th>
-                                        <td>5.6.27</td></tr>
+                                        <th>redis版本</th>
+                                        <td>latest</td></tr>
                                     <tr>
-                                        <th>PHP运行方式</th>
-                                        <td>cgi-fcgi</td></tr>
+                                        <th>nacos版本</th>
+                                        <td>1.1.0</td></tr>
                                     <tr>
                                         <th>MYSQL版本</th>
                                         <td>latest</td></tr>
+                                    <tr>
+                                        <th>开发团队</th>
+                                        <td>中通服软件科技有限公司无人机事业部运营中心</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -148,7 +152,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/admin/getUserCount",
+                url: ip+"/consumer/admin/getUserCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#userNumber").text(result.object);
@@ -162,7 +166,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/uav/getUavCount",
+                url: ip+"/consumer/uav/getUavCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#uavNumber").text(result.object);
@@ -176,7 +180,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/task/getApprovaledCount",
+                url: ip+"/consumer/task/getApprovaledCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#taskApprovaledNumber").text(result.object);
@@ -190,7 +194,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/task/getNoApprovaledCount",
+                url: ip+"/consumer/task/getNoApprovaledCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#taskNoApprovaledNumber").text(result.object);
@@ -204,7 +208,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/airspace/getApprovaledCount",
+                url: ip+"/consumer/airspace/getApprovaledCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#airspaceApprovaledNumber").text(result.object);
@@ -218,7 +222,7 @@
                 headers: {
                     Authorization: localStorage.Authorization
                 },
-                url: "http://localhost:9001/consumer/airspace/getNoApprovaledCount",
+                url: ip+"/consumer/airspace/getNoApprovaledCount",
                 success: function (result, textStatus, request) {
                     // localStorage.Authorization = request.getResponseHeader("Authorization");
                     $("#airspaceNoApprovaledNumber").text(result.object);

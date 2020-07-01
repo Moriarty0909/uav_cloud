@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+    
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.2</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <link rel="stylesheet" th:href="@{/css/font.css}">
+        <link rel="stylesheet" th:href="@{/css/login.css}">
+        <link rel="stylesheet" th:href="@{/css/xadmin.css}">
+        <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+        <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+        <script th:src="@{/js/xm-select.js}" charset="utf-8"></script>
+        <link rel="stylesheet" th:href="@{/css/font.css}">
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
+        <!--[if lt IE 9]>
+        <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+        <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]--></head>
+    
+    <body>
+        <div class="layui-fluid">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label for="airspaceName" class="layui-form-label">
+                        <span class="x-red">*</span>空域名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="airspaceName" name="airspaceName" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="startTime" class="layui-form-label"><span class="x-red">*</span>空域起始时间</label>
+                    <div class="layui-input-inline layui-show-xs-block">
+                        <input class="layui-input" placeholder="开始时间" name="startTime" id="startTime">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="endTime" class="layui-form-label"><span class="x-red">*</span>空域结尾时间</label>
+                    <div class="layui-input-inline layui-show-xs-block">
+                        <input class="layui-input" placeholder="结束时间" name="endTime" id="endTime">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="airspacePoint" class="layui-form-label">
+                        <span class="x-red">*</span>空域坐标</label>
+                    <div class="layui-input-inline" id="airspaceId" name="airspaceId">
+                        <input type="text" id="airspacePoint" name="airspacePoint" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label for="description" class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" id="description" name="description" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="display: none">
+                    <label for="userId" class="layui-form-label">
+                        <span class="x-red">*</span>单位编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="userId" name="userId" required="" lay-verify="required" autocomplete="off" class="layui-input"></div>
+                </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+        </form>
+        </div>
+        </div>
+        <script>
+            var a;
+            layui.use(['form', 'layer','laydate'],
+            function() {
+                var laydate = layui.laydate;
+                //执行一个laydate实例
+                laydate.render({
+                    elem: '#startTime' //指定元素
+                    ,type: 'datetime'
+                });
+                //执行一个laydate实例ju 9g
+                laydate.render({
+                    elem: '#endTime' //指定元素
+                    ,type: 'datetime'
+                });
+
+                $ = layui.jquery;
+                var form = layui.form,
+                layer = layui.layer;
+                //自定义验证规则
+
+                initdata();
+
+                //监听提交
+                form.on('submit(add)',
+                function(data) {
+                    //发异步，把数据提交给后端
+                    $.ajax({
+                        type:'post',
+                        url:ip+"/consumer/airspace/registerAirspace",
+                        headers: {
+                            Authorization: localStorage.Authorization
+                        },
+                        data:JSON.stringify(data.field), //将对象转为为json字符串
+                        dataType:"json",
+                        contentType:"application/json", //这个必须，不然后台接受时会出现乱码现象
+                        success:function(result) {
+                            if (result.code == 200) {
+                                layer.alert("增加成功", {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        localStorage.removeItem("line");
+                                        // 获得frame索引
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        //关闭当前frame
+                                        parent.layer.close(index);
+                                        window.parent.closeSelf();
+
+                                    });
+                            }else {
+                                layer.alert(result.msg, {
+                                        icon: 6
+                                    },
+                                    function() {
+                                        // 获得frame索引
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        //关闭当前frame
+                                        parent.layer.close(index);
+                                    });
+                            }
+                        }
+                    });
+                    return false;
+                });
+
+                function initdata() {
+                    $("#userId").val(localStorage.UserId);
+                    $("#airspacePoint").val("LINESTRING("+localStorage.line+")");
+                }
+            });
+
+
+        </script>
+        <script>var _hmt = _hmt || []; (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();</script>
+    </body>
+
+</html>

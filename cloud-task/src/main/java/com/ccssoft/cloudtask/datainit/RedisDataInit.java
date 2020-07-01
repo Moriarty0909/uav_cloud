@@ -31,7 +31,6 @@ public class RedisDataInit {
     public void init () {
         List<Task> tasks = taskDao.selectList(null);
         for (Task task : tasks) {
-            System.out.println(task.getId());
             redisBloomFilter.put(String.valueOf(task.getId()));
         }
 

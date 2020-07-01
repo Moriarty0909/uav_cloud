@@ -24,6 +24,11 @@ public class TurnController {
         return "welcome";
     }
 
+    @GetMapping("/turn/welcome1")
+    public String welcome1 () {
+        return "welcome1";
+    }
+
     @GetMapping("/turn/task-list-guess")
     public String taskListGuess () {
         return "task-list-guess";
@@ -59,4 +64,38 @@ public class TurnController {
         return "airspace-list-admin";
     }
 
+    @GetMapping("/turn/airspace-add")
+    public String airspaceAdd () {
+        return "airspace-add";
+    }
+
+    @GetMapping("/turn/airspace-map")
+    public String airspaceMap () {
+        return "airspace-map";
+    }
+
+    @GetMapping("/turn/airspace-edit")
+    public String airspaceEdit () {
+        return "airspace-edit";
+    }
+
+    @GetMapping("/turn/airspace-info")
+    public String airspaceInfo () {
+        return "airspace-info";
+    }
+
+    @GetMapping("/turn/admin-list")
+    public String adminList () {
+        return "admin-list";
+    }
+
+    @GetMapping("/turn/admin-edit")
+    public String adminEdit () {
+        return "admin-edit";
+    }
+
+    @GetMapping("/turn/admin-password")
+    public String adminPassword () {
+        return "admin-pwd";
+    }
 }

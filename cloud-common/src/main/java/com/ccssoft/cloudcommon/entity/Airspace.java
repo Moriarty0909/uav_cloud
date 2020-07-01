@@ -71,6 +71,12 @@ public class Airspace extends BaseEntity {
     private Date endTime;
 
     /**
+     * 空域使用描述
+     */
+    @ApiModelProperty("空域使用情况描述")
+    private String description;
+
+    /**
      * 附加数据
      */
     @ApiModelProperty("空域的所属，即userid，用于填入关系列表，不能为空。")

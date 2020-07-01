@@ -24,7 +24,7 @@
         $(document).ready(function () {
             var socket;
 
-            socket = new WebSocket("ws://localhost:10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
+            socket = new WebSocket(ws+":10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
             //打开事件
             socket.onopen = function() {
                 alert("Socket 已打开");
@@ -57,7 +57,7 @@
         });
 
         var map = new AMap.Map('container',{
-            zoom:12,//级别
+            zoom:11,//级别
             center: [108.314614,22.827239],//中心点坐标
             viewMode:'3D'//使用3D视图
         });

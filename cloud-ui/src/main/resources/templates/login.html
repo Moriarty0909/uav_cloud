@@ -13,6 +13,7 @@
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
     <link rel="stylesheet" th:href="@{/css/font.css}">
+    <script th:src="@{/js/ip.js}" charset="utf-8"></script>
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -46,7 +47,7 @@
                 layer.msg("登录中");
                 $.ajax({
                   type:'post',
-                  url:"http://localhost:9001/consumer/admin/authenticate",
+                  url:ip+"/consumer/admin/authenticate",
                   data:JSON.stringify(data.field), //将对象转为为json字符串
                   dataType:"json",
                   contentType:"application/json", //这个必须，不然后台接受时会出现乱码现象

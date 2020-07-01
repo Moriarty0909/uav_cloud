@@ -50,7 +50,7 @@ public interface AirspaceService extends IService<Airspace> {
      * @param date 计划预计开始时间
      * @return 成功获取则返回一组空域详情，如果失败则返回null
      */
-    List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, Date date);
+    List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, String date);
 
     /**
      * 获取未批准的空域分页数据
@@ -86,5 +86,12 @@ public interface AirspaceService extends IService<Airspace> {
      */
     Integer getApprovaledCount();
 
+    /**
+     * 以分页的形式获取与userid相关的空域详情
+     * @param current 当前页数
+     * @param size 每页的数量
+     * @param userId 用户id
+     * @return R
+     */
     Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId);
 }

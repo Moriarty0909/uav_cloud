@@ -15,6 +15,7 @@
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <script th:src="@{/js/xm-select.js}" charset="utf-8"></script>
         <link rel="stylesheet" th:href="@{/css/font.css}">
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
         <!--[if lt IE 9]>
         <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
         <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -107,7 +108,10 @@
                 //执行一个laydate实例
                 laydate.render({
                     elem: '#planStartTime' //指定元素
-                    ,type: 'datetime'
+                    ,type: 'datetime',
+                    done:function(value,data){
+                        getAirspace(value,data);
+                    }
                 });
                 //执行一个laydate实例ju 9g
                 laydate.render({
@@ -129,7 +133,7 @@
                     //发异步，把数据提交给后端
                     $.ajax({
                         type:'post',
-                        url:"http://localhost:9001/consumer/task/createPlan",
+                        url:ip+"/consumer/task/createPlan",
                         headers: {
                             Authorization: localStorage.Authorization
                         },
@@ -170,7 +174,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/task/getNatrue",
+                        url: ip+"/consumer/task/getNatrue",
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
@@ -190,7 +194,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/uav/getUavsByUserId/"+localStorage.UserId,
+                        url: ip+"/consumer/uav/getUavsByUserId/"+localStorage.UserId,
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
@@ -205,41 +209,49 @@
                             }
                         }
                     })
-                    $.ajax({
-                        type: 'get',
-                        headers: {
-                            Authorization: localStorage.Authorization
-                        },
-                        url: "http://localhost:9001/consumer/airspace/getAiarspaceByUserId/"+localStorage.UserId,
-                        success: function (result) {
-                            if(result.code == 200) {
-                                var data = result.object;
-                                // var str = '<option>请选择</option>';
-                                // for(var i=0;i<data.length;i++) {
-                                //     str += '<option value="'+data[i].id+'">'+data[i].airspaceName+'</option>'
-                                // }
-                                const cars = new Array();
-                                for(var i=0;i<data.length;i++) {
-                                    cars[i] = {value:data[i].id,name:data[i].airspaceName}
-                                }
-                                // $("#airspaceId").html(str);
-                                a=xmSelect.render({
-                                    el: '#airspaceId',
-                                    language: 'zn',
-                                    data: cars
-                                })
-                                form.render('select');
-                            }else {
-                                layer.alert(result.msg);
-                            }
-                        }
-                    })
+
+                    // $.ajax({
+                    //     type: 'get',
+                    //     headers: {
+                    //         Authorization: localStorage.Authorization
+                    //     },
+                    //     url: "http://localhost:9001/consumer/airspace/getAiarspaceByUserId/" + localStorage.UserId + "&" + value,
+                    //     success: function (result) {
+                    //
+                    //     }
+                    // })
                 }
 
 
             });
 
-
+        function getAirspace(value,data) {
+            $.ajax({
+                type: 'get',
+                headers: {
+                    Authorization: localStorage.Authorization
+                },
+                url: ip+"/consumer/airspace/getAiarspaceByUserId1/"+value+"&"+localStorage.UserId,
+                success: function (result) {
+                    if(result.code == 200) {
+                        var data = result.object;
+                        const cars = new Array();
+                        for(var i=0;i<data.length;i++) {
+                            cars[i] = {value:data[i].id,name:data[i].airspaceName}
+                        }
+                        // $("#airspaceId").html(str);
+                        a=xmSelect.render({
+                            el: '#airspaceId',
+                            language: 'zn',
+                            data: cars
+                        })
+                        form.render('select');
+                    }else {
+                        layer.alert(result.msg);
+                    }
+                }
+            })
+        }
         </script>
         <script>var _hmt = _hmt || []; (function() {
                 var hm = document.createElement("script");

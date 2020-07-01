@@ -33,7 +33,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     FilterChain chain) throws IOException, ServletException {
 
         String tokenHeader = request.getHeader(JwtTokenUtils.TOKEN_HEADER);
-        System.out.println("tokenHeader="+tokenHeader);
         // 如果请求头中没有Authorization信息则直接返回中断
         if (tokenHeader == null || !tokenHeader.startsWith(JwtTokenUtils.TOKEN_PREFIX)) {
             chain.doFilter(request, response);

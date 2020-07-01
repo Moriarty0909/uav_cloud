@@ -15,6 +15,7 @@
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <script th:src="@{/js/xm-select.js}" charset="utf-8"></script>
         <link rel="stylesheet" th:href="@{/css/font.css}">
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
         <!--[if lt IE 9]>
         <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
         <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -128,7 +129,7 @@
                     //发异步，把数据提交给后端
                     $.ajax({
                         type:'post',
-                        url:"http://localhost:9001/consumer/task/createPlan",
+                        url:ip+"/consumer/task/createPlan",
                         headers: {
                             Authorization: localStorage.Authorization
                         },
@@ -169,7 +170,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/task/getNatrue",
+                        url: ip+"/consumer/task/getNatrue",
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
@@ -189,7 +190,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/uav/getUavsByUserId/"+localStorage.UserId,
+                        url: ip+"/consumer/uav/getUavsByUserId/"+localStorage.UserId,
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
@@ -209,7 +210,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/airspace/getAiarspaceByUserId/"+localStorage.UserId,
+                        url: ip+"/consumer/airspace/getAiarspaceByUserId/"+localStorage.UserId,
                         success: function (result) {
                             if(result.code == 200) {
                                 var data = result.object;
@@ -241,7 +242,7 @@
                         headers: {
                             Authorization: localStorage.Authorization
                         },
-                        url: "http://localhost:9001/consumer/task/getPlan/" + localStorage.taskid,
+                        url: ip+"/consumer/task/getPlan/" + localStorage.taskid,
                         success: function (result) {
                             if (result.code == 200) {
                                 $("#taskName").val(result.object.taskName);

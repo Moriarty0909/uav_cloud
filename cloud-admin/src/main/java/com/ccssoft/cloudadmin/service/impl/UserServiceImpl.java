@@ -39,15 +39,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
             return null;
         }
 
-        if (redisUtil.get(username) == null) {
+//        if (redisUtil.get(username) == null) {
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.eq("username",username);
             User user = userDao.selectOne(wrapper);
             redisUtil.set(username,JSONUtil.parse(user),600);
             return user;
-        }
-        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(username));
-        return jsonObject.toBean(User.class);
+//        }
+//        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(username));
+//        return jsonObject.toBean(User.class);
 
     }
 
@@ -59,17 +59,17 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     @Override
     public Page getUserByPage(int current, int size) {
-        //TODO 先这么存，后续再优化
-        if (redisUtil.get(""+current+size) == null) {
+        //TODO 先这么存，后续再优化.不能这样存，管理者一停用账户就不会刷新了
+//        if (redisUtil.get(""+current+size) == null) {
             Page<User> page = new Page<>(current,size);
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.eq("role_id",2);
             userDao.selectPage(page,wrapper);
             redisUtil.set(""+current+size,page,6000);
             return page;
-        }
-        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(""+current+size));
-        return jsonObject.toBean(Page.class);
+//        }
+//        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(""+current+size));
+//        return jsonObject.toBean(Page.class);
 
     }
 

@@ -13,6 +13,7 @@
         <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
         <script th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
         <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+        <script th:src="@{/js/ip.js}" charset="utf-8"></script>
     </head>
     <body class="index">
         <!-- 顶部开始 -->
@@ -51,11 +52,11 @@
                     <dl class="layui-nav-child">
                         <!-- 二级菜单 -->
                         <dd>
-                            <a onclick="xadmin.open('个人信息','admin-edit.html')">个人信息</a></dd>
+                            <a onclick="xadmin.open('个人信息','admin-edit')">个人信息</a></dd>
                         <dd>
-                            <a onclick="xadmin.open('修改密码','member-edit.html')">修改密码</a></dd>
+                            <a onclick="xadmin.open('修改密码','admin-password')">修改密码</a></dd>
                         <dd>
-                            <a href="./login">退出</a></dd>//localStorage.clear();之后处理
+                            <a href="./login" onclick="clearCache()">退出</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -204,7 +205,7 @@
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
                             <li>
-                                <a onclick="xadmin.add_tab('用户列表','admin-list.html')">
+                                <a onclick="xadmin.add_tab('用户列表','admin-list')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>用户列表</cite></a>
                             </li>
@@ -317,34 +318,34 @@
 <!--                            </li>-->
 <!--                        </ul>-->
 <!--                    </li>-->
-                    <li>
-                        <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="其它页面">&#xe6b4;</i>
-                            <cite>其它页面</cite>
-                            <i class="iconfont nav_right">&#xe697;</i></a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="login.html" target="_blank">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>登录页面</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('错误页面','error.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>错误页面</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('示例页面','demo.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>示例页面</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('更新日志','log.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>更新日志</cite></a>
-                            </li>
-                        </ul>
-                    </li>
+<!--                    <li>-->
+<!--                        <a href="javascript:;">-->
+<!--                            <i class="iconfont left-nav-li" lay-tips="其它页面">&#xe6b4;</i>-->
+<!--                            <cite>其它页面</cite>-->
+<!--                            <i class="iconfont nav_right">&#xe697;</i></a>-->
+<!--                        <ul class="sub-menu">-->
+<!--                            <li>-->
+<!--                                <a href="login.html" target="_blank">-->
+<!--                                    <i class="iconfont">&#xe6a7;</i>-->
+<!--                                    <cite>登录页面</cite></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a onclick="xadmin.add_tab('错误页面','error.html')">-->
+<!--                                    <i class="iconfont">&#xe6a7;</i>-->
+<!--                                    <cite>错误页面</cite></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a onclick="xadmin.add_tab('示例页面','demo.html')">-->
+<!--                                    <i class="iconfont">&#xe6a7;</i>-->
+<!--                                    <cite>示例页面</cite></a>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <a onclick="xadmin.add_tab('更新日志','log.html')">-->
+<!--                                    <i class="iconfont">&#xe6a7;</i>-->
+<!--                                    <cite>更新日志</cite></a>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
 <!--                    <li>-->
 <!--                        <a href="javascript:;">-->
 <!--                            <i class="iconfont left-nav-li" lay-tips="第三方组件">&#xe6b4;</i>-->
@@ -406,8 +407,8 @@
                         <dd data-type="all">关闭全部</dd></dl>
                 </div>
                 <div class="layui-tab-content">
-                    <div class="layui-tab-item layui-show">
-                        <iframe src='./welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                    <div class="layui-tab-item layui-show" id="welcome">
+
                     </div>
                 </div>
                 <div id="tab_show"></div>
@@ -422,11 +423,16 @@
                 function() {
                    if((window.atob(localStorage.Authorization.split(".")[1])).split(":")[5] === '"ROLE_ADMIN"}') {
                        $("li[name='guess']").attr('style','display:none');
+                       $("#welcome").html('<iframe src="./welcome" frameborder="0" scrolling="yes" class="x-iframe"></iframe>')
 
                    } else {
                        $("li[name='admin']").attr('style','display:none');
+                       $("#welcome").html('<iframe src="./welcome1" frameborder="0" scrolling="yes" class="x-iframe"></iframe>')
                    }
                 });
+            function clearCache() {
+                localStorage.clear();
+            }
         </script>
     </body>
 

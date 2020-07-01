@@ -56,8 +56,8 @@ public interface AirspaceService {
      * @param date 需要比对计划时间是否在空域的起始范围内，直接传Date或null
      * @return R
      */
-    @GetMapping("/airspace/getASByUserId/{id}&{time}")
-    R getAirspaceByUserId (@PathVariable("id") Long userId,@PathVariable("time") Date date);
+    @GetMapping("/airspace/getASByUserId1/{id}&{time}")
+    R getAirspaceByUserId1 (@PathVariable("id") Long userId,@PathVariable("time") String date);
 
     /**
      * 远程调用有关空域管理模块的批量查询符合条件的所有空域功能
@@ -96,4 +96,14 @@ public interface AirspaceService {
      */
     @GetMapping("/airspace/getApprovaledCount")
     R getApprovaledCount ();
+
+    /**
+     * 远程调用有关空域管理模块的获取分页形式的对应userid的空域详情功能
+     * @param current 当前页数
+     * @param size 每页数量
+     * @param userId 用户id
+     * @return R
+     */
+    @GetMapping("/airspace/getAirspaceByUserId4Page/{current}&{size}&{id}")
+    R getAirspaceByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size,@PathVariable("id") Long userId);
 }
