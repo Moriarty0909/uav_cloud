@@ -1,9 +1,6 @@
 package com.ccssoft.cloudauth.controller;
 
-import com.ccssoft.cloudauth.service.AdminService;
-import com.ccssoft.cloudauth.service.AirspaceService;
-import com.ccssoft.cloudauth.service.TaskService;
-import com.ccssoft.cloudauth.service.UavService;
+import com.ccssoft.cloudauth.service.*;
 import com.ccssoft.cloudcommon.common.utils.R;
 import com.ccssoft.cloudcommon.entity.Airspace;
 import com.ccssoft.cloudcommon.entity.Task;
@@ -40,6 +37,18 @@ public class AuthController {
     @Resource
     private UavService uavService;
 
+    @Resource
+    private CodeService codeService;
+
+    @GetMapping("//consumert/admin/verifyCode/{code}&{phone}")
+    public R verifyCode (@PathVariable("code") String code, @PathVariable("phone") String phoneNumber) {
+        return codeService.verifyCode(code,phoneNumber) ? R.ok("验证通过") : R.error();
+    }
+
+    @GetMapping("/consumert/admin/sendCode/{phone}")
+    public R getCode (@PathVariable("phone") String phoneNumber) {
+        return codeService.sendCode(phoneNumber) ? R.ok("已发送成功") : R.error();
+    }
 
     @GetMapping("/consumer/admin/verificationCode")
     public R getVerificationCode () {

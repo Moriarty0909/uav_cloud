@@ -24,10 +24,10 @@
         $(document).ready(function () {
             var socket;
 
-            socket = new WebSocket(ws+":10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
+            socket = new WebSocket("ws://134.192.243.35:10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
             //打开事件
             socket.onopen = function() {
-                alert("Socket 已打开");
+                // alert("Socket 已打开");
             };
             //关闭事件
             socket.onclose = function() {
