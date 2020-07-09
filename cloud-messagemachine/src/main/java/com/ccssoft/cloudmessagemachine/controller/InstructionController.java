@@ -5,7 +5,7 @@ import com.ccssoft.cloudmessagemachine.service.BoxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import javax.annotation.Resource;
+
 
 /**
  * @author moriarty
@@ -23,8 +23,4 @@ public class InstructionController {
         return boxService.restartBox(id);
     }
 
-    @GetMapping("/map")
-    public String mapp() {
-        return "mapAndPlane";
-    }
 }

@@ -9,13 +9,9 @@ import com.ccssoft.cloudcommon.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import javafx.util.converter.DateStringConverter;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 /**

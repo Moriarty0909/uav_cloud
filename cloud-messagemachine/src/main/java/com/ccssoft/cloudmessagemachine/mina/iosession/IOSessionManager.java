@@ -33,21 +33,23 @@ public class IOSessionManager {
 
     }
 
-    public static void removeSession (IoSession session) {
+    public static Long removeSession (IoSession session) {
         ReentrantLock lock = new ReentrantLock();
 
         Long id = sessionMap.get(session);
+
         lock.lock();
         try {
             sessionMap.remove(session);
             idMap.remove(id);
+            return id;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         } finally {
             lock.unlock();
             System.out.println("移除"+id);
         }
-
     }
 
     public static IoSession getSession (Long id) {

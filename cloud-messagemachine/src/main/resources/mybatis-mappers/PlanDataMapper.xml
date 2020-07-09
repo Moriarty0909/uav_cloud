@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccssoft.cloudmessagemachine.dao.PlanDataDao">
+
+    <insert id="insertData" parameterType="com.ccssoft.cloudmessagemachine.entity.PlanData" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO plan_data  ( id,uav_id, altitude,start, end, distance, coordinate,gmt_create, gmt_modified)  VALUES
+        (#{id},#{uavId}, #{altitude}, #{start}, #{end}, #{distance} ,ST_GeomFromText(#{coordinate}),#{gmtCreate} ,#{gmtModified})
+    </insert>
+</mapper>

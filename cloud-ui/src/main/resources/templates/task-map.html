@@ -24,19 +24,18 @@
         $(document).ready(function () {
             var socket;
 
-            socket = new WebSocket("ws://134.192.243.35:10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
+            socket = new WebSocket("ws://localhost:10001/websocket/"+(Math.random()*10000000).toString(16).substr(0,4)+'-'+(new Date()).getTime()+'-'+Math.random().toString().substr(2,5));
             //打开事件
             socket.onopen = function() {
-                // alert("Socket 已打开");
+                console.log("Socket 已打开");
             };
             //关闭事件
             socket.onclose = function() {
-
-                alert("Socket已关闭");
+                console.log("Socket已关闭");
             };
             //发生了错误事件
             socket.onerror = function() {
-                alert("发生了错误");
+                console.log("发生了错误");
             }
 
             //获得消息事件
@@ -45,7 +44,8 @@
                 console.log("这是接收到的信息："+message);
                 const data = message.split(":")
                 if (data[1] == "offline") {
-                    alert("关机了")
+                    console.log("盒子关机，一段任务完成，删除地图展示！")
+                    myMap.delete(data[0]);
                 //     关机了
                 } else {
                     const id = data[0];
@@ -82,8 +82,8 @@
                 // console.log("data1="+data.split(",")[1]);
                 // console.log("data2="+data.split(",")[0]);
                 var a = [];
-                a[0] = data.split(",")[1];//108.314614;
-                a[1] = data.split(",")[0];//22.827239;
+                a[0] = data.split(" ")[1];//108.314614;
+                a[1] = data.split(" ")[0];//22.827239;
 
                 circleMarker = new AMap.CircleMarker({
                     center:a,//mapIter.next().value,
