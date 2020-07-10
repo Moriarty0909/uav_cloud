@@ -3,8 +3,6 @@ package com.ccssoft.cloudcommon.common.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 
-
-
 public class SpringBeanUtils{
     private static ApplicationContext applicationContext;
 
