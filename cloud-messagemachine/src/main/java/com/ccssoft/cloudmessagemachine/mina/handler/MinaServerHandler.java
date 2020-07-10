@@ -9,12 +9,14 @@ import com.ccssoft.cloudmessagemachine.entity.Message;
 import com.ccssoft.cloudmessagemachine.entity.PlanData;
 import com.ccssoft.cloudmessagemachine.mina.comon.ComonUtils;
 import com.ccssoft.cloudmessagemachine.mina.iosession.IOSessionManager;
+import com.ccssoft.cloudmessagemachine.utils.RedisUtil;
 import com.ccssoft.cloudmessagemachine.websocket.WebsocketService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.Jedis;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -31,7 +33,7 @@ import java.util.Map;
 @Slf4j
 public class MinaServerHandler extends IoHandlerAdapter {
 
-
+    private RedisUtil redisUtil;
     private Jedis jedis = new Jedis("183.56.219.211",16379);
     /**
      * 会话创建
@@ -40,6 +42,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
      */
     @Override
     public void sessionCreated(IoSession session) throws Exception {
+        redisUtil = (RedisUtil)SpringBeanUtils.getBean("redisUtils");
         super.sessionCreated(session);
         // 获取客户端ip
         InetSocketAddress socketAddress = (InetSocketAddress) session.getRemoteAddress();
@@ -164,6 +167,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
             String[] split = point.split(" ");
             double longitude = Double.valueOf(split[1]);
             double latitude = Double.valueOf(split[0]);
+            System.out.println("redis能用吗"+redisUtil);
             jedis.select(7);
 
             if (Double.valueOf(message.getSpeed()) >4.0 && StringUtil.isNullOrEmpty(jedis.get(id+"data"))) {
