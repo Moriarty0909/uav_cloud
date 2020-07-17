@@ -4,6 +4,7 @@ import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.lang.Console;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ccssoft.cloudadmin.service.SearchService;
 import com.ccssoft.cloudcommon.entity.User;
 import com.ccssoft.cloudadmin.service.UserService;
 import com.ccssoft.cloudcommon.common.utils.R;
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +31,9 @@ import java.util.Map;
 public class AdminController {
     @Resource
     private UserService userService;
+
+    @Resource
+    private SearchService searchService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -94,4 +99,16 @@ public class AdminController {
         return R.ok(userCount);
     }
 
+
+    /**
+     * ElasticSearch根据搜索框输入关键字查询对应数据，以分页形式返回前端
+     * @param keywords 关键字
+     * @param size 每页数据量
+     * @param current 当前页数
+     * @return 数据
+     */
+    @GetMapping("/search/{keywords}&{current}&{size}")
+    public List<Map<String,Object>> search (@PathVariable("keywords") String keywords, @PathVariable("size") int size, @PathVariable("current") int current) {
+        return searchService.searchPage(keywords,current,size);
+    }
 }

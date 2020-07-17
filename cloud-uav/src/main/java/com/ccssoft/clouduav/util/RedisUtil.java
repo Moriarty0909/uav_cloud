@@ -411,6 +411,22 @@ public final class RedisUtil {
     }
 
     /**
+     * 通过开始与结束下标从右获取list里的一组元素
+     * @param key 键
+     * @param start 从哪开始
+     * @param end 从哪结束
+     * @return
+     */
+    public Object getRange(String key, int start, int end) {
+        try {
+            return redisTemplate.opsForList().range(key, start, end);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 通过索引 获取list中的值
      * @param key 键
      * @param index 索引 index>=0时， 0 表头，1 第二个元素，依次类推；index<0时，-1，表尾，-2倒数第二个元素，依次类推
@@ -426,12 +442,28 @@ public final class RedisUtil {
     }
 
     /**
-     * 将list放入缓存
+     * 将list从左放入缓存
      * @param key 键
      * @param value 值
      * @return
      */
     public boolean lSet(String key, Object value) {
+        try {
+            redisTemplate.opsForList().leftPush(key, value);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 将list放入缓存
+     * @param key 键
+     * @param value 值
+     * @return
+     */
+    public boolean rSet(String key, Object value) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
             return true;

@@ -187,7 +187,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId) {
-        //还是不加缓存了，不然还要处理新增的问题，而这个列表还是经常新增的。
+        //TODO 其实这里可以用redis的list，在初始化的时候挨个放入对象，通过getRange范围的获取需要的数据然后分页形式返回，效率会高很多
         List list = getAirspaceIdsByUserId(userId);
         Page<Airspace> page = new Page<>(current,size);
         List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
