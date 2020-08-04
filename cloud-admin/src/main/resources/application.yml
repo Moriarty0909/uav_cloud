@@ -4,6 +4,8 @@ spring:
   application:
     name: admin-server
   datasource:
+    hikari:
+      maximum-pool-size=10: 20
     url: jdbc:mysql://183.56.219.211:33066/uav_cloud?useUnicode=true&characterEncoding=utf8&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root

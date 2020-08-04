@@ -167,6 +167,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
             jedis.select(7);
 
             if (Double.valueOf(message.getSpeed()) >4.0 && StringUtil.isNullOrEmpty(jedis.get(id+"data"))) {
+                //存放记录开始时间
                 map.put(id+"time",message.getTime());
                 jedis.set(id+"data", point+":"+altitude);
                 add(id,longitude,latitude);
@@ -182,6 +183,7 @@ public class MinaServerHandler extends IoHandlerAdapter {
 
     private void add (String id, double longitude, double latitude) {
         if(map.get(id) == null) {
+            //设置初始值关于记录坐标点距离的
             map.put(id,0);
             jedis.geoadd(id,longitude,latitude,String.valueOf(map.get(id)));
         } else {
@@ -196,9 +198,8 @@ public class MinaServerHandler extends IoHandlerAdapter {
         for (int i = 0;i<size-1;i++) {
             geodist += jedis.geodist(String.valueOf(id), String.valueOf(i), String.valueOf(i + 1));
         }
-        String s = jedis.get(id + "data");
+        String s = jedis.get(id+"data");
 
-        //TODO 之后再持久化到mysql吧
         PlanData data = new PlanData();
         String[] split = s.split(",");
         String height = "";
@@ -226,7 +227,12 @@ public class MinaServerHandler extends IoHandlerAdapter {
         data.setEnd(new Date());
         data.setGmtCreate(date);
         data.setGmtModified(date);
+        System.out.println(data);
         dataDao.insertData(data);
-
+        log.info("持久化完成");
+        //清除缓存和map
+        jedis.del(id+"data");
+        jedis.del(String.valueOf(id));
+        map.remove(id);
     }
 }
