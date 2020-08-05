@@ -233,7 +233,6 @@ public class TaskController {
             }
             taskVo.setAirspaceName(nameList);
             //获取无人机的名称
-            //TODO 这里应该也可以加上缓存
             Uav uav = uavService.getUavById(task.getUavId());
             taskVo.setUavName(uav.getNickname());
 
