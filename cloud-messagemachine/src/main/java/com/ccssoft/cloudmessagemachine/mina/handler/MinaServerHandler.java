@@ -73,7 +73,6 @@ public class MinaServerHandler extends IoHandlerAdapter {
         //从管理器删除
         Long id = IOSessionManager.removeSession(session);
         saveDataInMysql(id);
-
     }
 
 
@@ -177,7 +176,6 @@ public class MinaServerHandler extends IoHandlerAdapter {
             }
 
             map.put(id,(Integer)map.get(id)+1);
-
         }
     }
 
@@ -185,10 +183,8 @@ public class MinaServerHandler extends IoHandlerAdapter {
         if(map.get(id) == null) {
             //设置初始值关于记录坐标点距离的
             map.put(id,0);
-            jedis.geoadd(id,longitude,latitude,String.valueOf(map.get(id)));
-        } else {
-            jedis.geoadd(id,longitude,latitude,String.valueOf(map.get(id)));
         }
+        jedis.geoadd(id,longitude,latitude,String.valueOf(map.get(id)));
     }
 
     private void saveDataInMysql(Long id) throws ParseException {
@@ -227,12 +223,12 @@ public class MinaServerHandler extends IoHandlerAdapter {
         data.setEnd(new Date());
         data.setGmtCreate(date);
         data.setGmtModified(date);
-        System.out.println(data);
+        //持久化到数据库
         dataDao.insertData(data);
         log.info("持久化完成");
         //清除缓存和map
         jedis.del(id+"data");
         jedis.del(String.valueOf(id));
-        map.remove(id);
+        map.remove(String.valueOf(id));
     }
 }
