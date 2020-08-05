@@ -166,7 +166,8 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public int updateAirSpace(Airspace airspace) {
-        //TODO 还需要处理一下redis缓存
+        //更新时只需要删除是效率最高最节省资源的
+        redisUtil.del(String.valueOf(airspace.getId()));
         airspace.setStatus(0);
         return airspaceDao.updateInfo(airspace);
     }
@@ -195,6 +196,9 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         wrapper.in("id",list);
         Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
         airspacePage.setRecords(airspaceList);
+        for (Airspace airspace : airspaceList) {
+            redisUtil.lSet("airspace",airspace);
+        }
         return airspacePage;
     }
 
