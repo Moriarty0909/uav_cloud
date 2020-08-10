@@ -188,18 +188,40 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId) {
-        //TODO 其实这里可以用redis的list，在初始化的时候挨个放入对象，通过getRange范围的获取需要的数据然后分页形式返回，效率会高很多
-        List list = getAirspaceIdsByUserId(userId);
-        Page<Airspace> page = new Page<>(current,size);
-        List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
-        QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
-        wrapper.in("id",list);
-        Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
-        airspacePage.setRecords(airspaceList);
-        for (Airspace airspace : airspaceList) {
-            redisUtil.lSet("airspace",airspace);
+        if (redisUtil.lGetListSize("airspaceBy"+userId) < (current-1) * size) {
+            //断开之后从中间重新开始，自动补齐前面。
+            List list = getAirspaceIdsByUserId(userId);
+            Page<Airspace> page = new Page<>(current,size);
+            List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
+            QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+            wrapper.in("id",list);
+            Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
+            airspacePage.setRecords(airspaceList);
+            airspaceList = airspaceDao.getAirspaceListByIdList4Page(0,current * size - 1,list);
+            for (Airspace airspace : airspaceList) {
+                redisUtil.lSet("airspaceBy"+userId,airspace);
+            }
+            return airspacePage;
+        } else if (redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1) != null) {
+            //顺序往下
+            Page page = new Page<>(current,size);
+            page.setRecords(redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1));
+            page.setTotal(redisUtil.lGetListSize("airspaceBy"+userId));
+            return page;
+        } else {
+            //从头进来
+            List list = getAirspaceIdsByUserId(userId);
+            Page<Airspace> page = new Page<>(current,size);
+            List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
+            QueryWrapper<Airspace> wrapper = new QueryWrapper<>();
+            wrapper.in("id",list);
+            Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
+            airspacePage.setRecords(airspaceList);
+            for (Airspace airspace : airspaceList) {
+                redisUtil.lSet("airspaceBy"+userId,airspace,300);
+            }
+            return airspacePage;
         }
-        return airspacePage;
     }
 
     private List<Long> getAirspaceIdsByUserId (Long userId) {
