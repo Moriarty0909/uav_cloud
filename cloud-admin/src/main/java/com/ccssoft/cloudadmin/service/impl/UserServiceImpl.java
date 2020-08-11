@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,18 +60,37 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     @Override
     public Page getUserByPage(int current, int size) {
-        //TODO 先这么存，后续再优化.不能这样存，管理者一停用账户就不会刷新了
-//        if (redisUtil.get(""+current+size) == null) {
+        if (redisUtil.lGetListSize("userforpage") == (current-1) * size){//TODO 这里还是有问题的，要换小区改造那种写法
+            //正常缓存里有数据的时候，直接获取
+            List userforpage = redisUtil.lGet("userforpage", (current - 1) * size, current * size - 1);
+            Page<User> page = new Page<>(current,size);
+            page.setRecords(userforpage);
+            return page;
+        } else if (redisUtil.lGetListSize("userforpage") < (current-1) * size) {
+            //当缓存里什么数据都没有的时候
             Page<User> page = new Page<>(current,size);
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.eq("role_id",2);
             userDao.selectPage(page,wrapper);
-            redisUtil.set(""+current+size,page,6000);
-            return page;
-//        }
-//        JSONObject jsonObject = JSONUtil.parseObj(redisUtil.get(""+current+size));
-//        return jsonObject.toBean(Page.class);
+            Page<User> list = new Page<>(0,current * size - 1);
+            userDao.selectPage(list,wrapper);
 
+            for (User record : list.getRecords()) {
+                redisUtil.lSet("userforpage",record,300);
+            }
+            return page;
+        } else {
+            //当缓存里没有这一批新数据的时候，查询，存，返回
+            Page<User> page = new Page<>(current,size);
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.eq("role_id",2);
+            userDao.selectPage(page,wrapper);
+
+            for (User record : page.getRecords()) {
+                redisUtil.lSet("userforpage",record,300);
+            }
+            return page;
+        }
     }
 
     @Override

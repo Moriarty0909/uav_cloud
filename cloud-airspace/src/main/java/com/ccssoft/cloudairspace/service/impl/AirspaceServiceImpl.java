@@ -93,7 +93,6 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
 
     @Override
     public List<Airspace> getAirspaceByUserIdPremiseTime(Long userId, String date) {
-        //TODO 思考下怎么复用好
         List list = getAirspaceIdsByUserId(userId);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date1 = null;
