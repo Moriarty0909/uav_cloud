@@ -18,7 +18,19 @@ spring:
         min-idle: 10000
   session:
     store-type: redis
-
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 183.56.219.211:8858
+        port: 8719
+      datasource:
+        ds:
+          nacos:
+            server-add: 183.56.219.211:8848
+            dataId: airspace-nacos
+            group: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
 
 mybatis-plus:
   type-aliases-package: com.ccssoft.cloudcommon.entity
@@ -36,3 +48,10 @@ bloom:
   filter:
     expectedInsertions: 1000
     fpp: 0.001F
+service-url:
+  nacos-user-service:
+
+#激活Sentinel对Feign的支持
+feign:
+  sentinel:
+    enabled: true

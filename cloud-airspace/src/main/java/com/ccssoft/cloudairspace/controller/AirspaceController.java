@@ -84,11 +84,24 @@ public class AirspaceController {
      * @param size 每页数据量
      * @return R
      */
-    //TODO用redis的list其实可以很好的实现这个分页的缓存，在新增和删除的时候处理一下就行，因为一个个的所以影响不大。
+    //TODO 用redis的list其实可以很好的实现这个分页的缓存，在新增和删除的时候处理一下就行，因为一个个的所以影响不大。
     @GetMapping("/getAirspaceByUserId4Page/{current}&{size}&{id}")
     public R getAirspaceByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size,@PathVariable("id") Long userId) {
         log.info("AirspaceController.getAirspaceByUserId4Page(),参数：当前页数={},每页数量={},用户id={}",current,size,userId);
         return R.ok(airspaceService.getAirspaceByUserId4Page(current,size,userId));
+    }
+
+    /**
+     * ElasticSearch根据搜索框输入关键字查询对应数据，以分页形式返回前端
+     * @param keywords 关键字
+     * @param size 每页数据量
+     * @param current 当前页数
+     * @return 数据
+     */
+    //TODO 开写全文检索
+    @GetMapping("/search/{keywords}&{current}&{size}")
+    public List<Map<String,Object>> search (@PathVariable("keywords") String keywords, @PathVariable("size") int size, @PathVariable("current") int current) {
+        return searchService.searchPage(keywords,current,size);
     }
 
     /**
@@ -173,17 +186,5 @@ public class AirspaceController {
         return airspaceService.getAirspaceByAirspaceIds(list);
     }
 
-    /**
-     * ElasticSearch根据搜索框输入关键字查询对应数据，以分页形式返回前端
-     * @param keywords 关键字
-     * @param size 每页数据量
-     * @param current 当前页数
-     * @return 数据
-     */
-    //TODO 开写全文检索
-    @GetMapping("/search/{keywords}&{current}&{size}")
-    public List<Map<String,Object>> search (@PathVariable("keywords") String keywords, @PathVariable("size") int size, @PathVariable("current") int current) {
-        return searchService.searchPage(keywords,current,size);
-    }
 }
 
