@@ -98,7 +98,6 @@ public class AirspaceController {
      * @param current 当前页数
      * @return 数据
      */
-    //TODO 开写全文检索
     @GetMapping("/search/{keywords}&{current}&{size}")
     public List<Map<String,Object>> search (@PathVariable("keywords") String keywords, @PathVariable("size") int size, @PathVariable("current") int current) {
         return searchService.searchPage(keywords,current,size);
