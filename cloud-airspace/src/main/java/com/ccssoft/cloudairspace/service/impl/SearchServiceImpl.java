@@ -54,9 +54,12 @@ public class SearchServiceImpl implements SearchService {
         //构建高亮
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("airspaceName");
-        highlightBuilder.requireFieldMatch(false);//关闭多个高亮显示！
-        highlightBuilder.preTags("<span style='color:red'>");//前缀
-        highlightBuilder.postTags("</span>");//后缀
+        //关闭多个高亮显示！
+        highlightBuilder.requireFieldMatch(false);
+        //前缀
+        highlightBuilder.preTags("<span style='color:red'>");
+        //后缀
+        highlightBuilder.postTags("</span>");
         sourceBuilder.highlighter(highlightBuilder);
 
         //执行搜索
@@ -73,7 +76,7 @@ public class SearchServiceImpl implements SearchService {
         for (SearchHit documentFields : search.getHits().getHits()) {
             //获取高亮的信息，现在里面就包含了airspace_name
             Map<String, HighlightField> highlightFields = documentFields.getHighlightFields();
-            HighlightField title = highlightFields.get("title");//又有两个元素
+            HighlightField title = highlightFields.get("title");
             //获取原来的数据没需要把高亮字段替换掉之前的
             Map<String, Object> sourceAsMap = documentFields.getSourceAsMap();
             if (title != null) {

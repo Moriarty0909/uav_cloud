@@ -185,9 +185,22 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         return airspaceDao.selectCount(wrapper);
     }
 
+    //TODO 用redis的list其实可以很好的实现这个分页的缓存，在新增和删除的时候处理一下就行，因为一个个的所以影响不大。
+    /**
+     * 会分成三个部分
+     * 1.每次进来先查询缓存里是否加载完所有的数据(需要在初始化的时候把所需数据表里个数都存在缓存里，并在每次新增是去缓存++)或判断是否是最后一页即判断所取页数的情况在缓存列队中是否能去出size数量的数据
+     * 2.判断是否是从中间断开的，即key失效之后还有人在使用数据，要取出当前数据给他，还要把他之前的所有数据再重新加载会缓存队列中
+     * 3.都不满足，说明是第一次查询到当前页面数据，或当前页为尾页并且有新增数据还没有在缓存队列中，就返回所需数据的同时，把新增的数据加入队列
+     */
     @Override
     public Page<Airspace> getAirspaceByUserId4Page(int current, int size, Long userId) {
-        if (redisUtil.lGetListSize("airspaceBy"+userId) < (current-1) * size) {
+
+        if ( redisUtil.lGet("airspaceBy"+userId,(current-1) * size ,current * size -1).size() == size || redisUtil.lGetListSize("airspaceBy"+userId) == (long)redisUtil.get("airspaceCount")) {
+            Page page = new Page<>(current,size);
+            page.setRecords(redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1));
+            page.setTotal(redisUtil.lGetListSize("airspaceBy"+userId));
+            return page;
+        } else if (redisUtil.lGetListSize("airspaceBy"+userId) < (current-1) * size) {
             //断开之后从中间重新开始，自动补齐前面。
             List list = getAirspaceIdsByUserId(userId);
             Page<Airspace> page = new Page<>(current,size);
@@ -201,14 +214,7 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
                 redisUtil.lSet("airspaceBy"+userId,airspace);
             }
             return airspacePage;
-        } else if (redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1) != null) {
-            //顺序往下
-            Page page = new Page<>(current,size);
-            page.setRecords(redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1));
-            page.setTotal(redisUtil.lGetListSize("airspaceBy"+userId));
-            return page;
         } else {
-            //从头进来
             List list = getAirspaceIdsByUserId(userId);
             Page<Airspace> page = new Page<>(current,size);
             List<Airspace> airspaceList = airspaceDao.getAirspaceListByIdList4Page((current-1)*size,size,list);
@@ -216,8 +222,10 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
             wrapper.in("id",list);
             Page<Airspace> airspacePage = airspaceDao.selectPage(page, wrapper);
             airspacePage.setRecords(airspaceList);
-            for (Airspace airspace : airspaceList) {
-                redisUtil.lSet("airspaceBy"+userId,airspace,300);
+            int result = airspaceList.size() - redisUtil.lGet("airspaceBy"+userId,(current-1) * size,current * size - 1).size();
+
+            for (int i = 0; i < result; i++) {
+                redisUtil.lSet("airspaceBy"+userId,airspaceList.get(result++));
             }
             return airspacePage;
         }

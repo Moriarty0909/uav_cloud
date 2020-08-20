@@ -1,17 +1,18 @@
 package com.ccssoft.cloudairspace.datainit;
 
-import cn.hutool.core.lang.Console;
+
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ccssoft.cloudairspace.dao.AirspaceDao;
 import com.ccssoft.cloudairspace.dao.UserAirspaceDao;
 import com.ccssoft.cloudairspace.entity.UserAirspace;
 import com.ccssoft.cloudairspace.filter.RedisBloomFilter;
+import com.ccssoft.cloudairspace.util.RedisUtil;
 import com.ccssoft.cloudcommon.entity.Airspace;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
-
 
 /**
  * @author moriarty
@@ -28,6 +29,9 @@ public class RedisDataInit {
     @Resource
     private UserAirspaceDao userAirspaceDao;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     @PostConstruct
     public void init () {
         List<Airspace> airspaces = airspaceDao.selectList(null);
@@ -40,5 +44,9 @@ public class RedisDataInit {
         for (UserAirspace userAirspace : userAirspaces) {
             redisBloomFilter.put(String.valueOf(userAirspace.getUserId()));
         }
+
+        Integer airspacesCount = airspaceDao.selectCount(null);
+        redisUtil.set("airspaceCount",airspacesCount);
+
     }
 }

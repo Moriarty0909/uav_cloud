@@ -33,19 +33,19 @@ public class ElasticSearchDataInit {
      */
     @PostConstruct
     public void init () throws IOException {
-        List<Airspace> airspaces = airspaceDao.selectList(null);
-
-        GetIndexRequest request = new GetIndexRequest("airspace");
-        if ( client.indices().exists(request, RequestOptions.DEFAULT)) {
-            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("airspace");
-            client.indices().delete(deleteIndexRequest,RequestOptions.DEFAULT);
-        }
-
-        BulkRequest bulkRequest = new BulkRequest();
-        bulkRequest.timeout("10s");
-        for (Airspace airspace : airspaces) {
-            bulkRequest.add(new IndexRequest().id(String.valueOf(airspace.getId())).source(airspace));
-        }
-        client.bulk(bulkRequest,RequestOptions.DEFAULT);
+//        List<Airspace> airspaces = airspaceDao.selectList(null);
+//
+//        GetIndexRequest request = new GetIndexRequest("airspace");
+//        if ( client.indices().exists(request, RequestOptions.DEFAULT)) {
+//            DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest("airspace");
+//            client.indices().delete(deleteIndexRequest,RequestOptions.DEFAULT);
+//        }
+//
+//        BulkRequest bulkRequest = new BulkRequest();
+//        bulkRequest.timeout("10s");
+//        for (Airspace airspace : airspaces) {
+//            bulkRequest.add(new IndexRequest().id(String.valueOf(airspace.getId())).source(airspace));
+//        }
+//        client.bulk(bulkRequest,RequestOptions.DEFAULT);
     }
 }

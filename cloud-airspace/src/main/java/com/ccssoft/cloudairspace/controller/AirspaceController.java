@@ -84,7 +84,6 @@ public class AirspaceController {
      * @param size 每页数据量
      * @return R
      */
-    //TODO 用redis的list其实可以很好的实现这个分页的缓存，在新增和删除的时候处理一下就行，因为一个个的所以影响不大。
     @GetMapping("/getAirspaceByUserId4Page/{current}&{size}&{id}")
     public R getAirspaceByUserId4Page (@PathVariable("current") int current, @PathVariable("size") int size,@PathVariable("id") Long userId) {
         log.info("AirspaceController.getAirspaceByUserId4Page(),参数：当前页数={},每页数量={},用户id={}",current,size,userId);
