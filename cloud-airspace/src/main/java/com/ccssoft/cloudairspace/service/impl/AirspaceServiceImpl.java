@@ -185,7 +185,6 @@ public class AirspaceServiceImpl extends ServiceImpl<AirspaceDao, Airspace> impl
         return airspaceDao.selectCount(wrapper);
     }
 
-    //TODO 用redis的list其实可以很好的实现这个分页的缓存，在新增和删除的时候处理一下就行，因为一个个的所以影响不大。
     /**
      * 会分成三个部分
      * 1.每次进来先查询缓存里是否加载完所有的数据(需要在初始化的时候把所需数据表里个数都存在缓存里，并在每次新增是去缓存++)或判断是否是最后一页即判断所取页数的情况在缓存列队中是否能去出size数量的数据
