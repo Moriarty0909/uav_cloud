@@ -29,10 +29,11 @@ public class JwtTokenUtils {
     private static final long EXPIRATION_REMEMBER = 604800L;
 
     // 创建token
-    public static String createToken(String username,String role, boolean isRememberMe) {
+    public static String createToken(String username,long id, String role, boolean isRememberMe) {
         long expiration = isRememberMe ? EXPIRATION_REMEMBER : EXPIRATION;
         HashMap<String, Object> map = new HashMap<>();
         map.put(ROLE_CLAIMS, role);
+        map.put("userId",id);
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 //放入权限相关

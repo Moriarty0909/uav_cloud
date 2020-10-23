@@ -26,7 +26,6 @@ public class RedisDataInit {
     @PostConstruct
     public void init () {
         List<User> users = userDao.selectList(null);
-
         for (User user : users) {
             redisBloomFilter.put(String.valueOf(user.getUsername()));
         }

@@ -42,6 +42,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             SecurityContextHolder.getContext().setAuthentication(getAuthentication(tokenHeader));
         } catch (TokenIsExpiredException e) {
+            //TODO token超时刷新需要修复
             //返回json形式的错误信息
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");
