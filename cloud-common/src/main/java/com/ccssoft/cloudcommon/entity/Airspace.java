@@ -1,13 +1,12 @@
 package com.ccssoft.cloudcommon.entity;
 
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.ccssoft.cloudcommon.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;

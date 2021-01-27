@@ -18,9 +18,9 @@ import javax.validation.Valid;
 @FeignClient(value = "admin-server")//调用哪个微服务
 public interface AdminService {
 
-    @GetMapping("/admin/login")
-    String login();
-
+//    @GetMapping("/admin/login")
+//    String login();
+//
     /**
      * 远程调用有关用户管理模块的用户注册功能
      * @param user 需注册的用户详情

@@ -55,10 +55,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 登录相关放行
                 .antMatchers("/consumert/admin/code").permitAll()
                 .antMatchers("/consumer/admin/verificationCode").permitAll()
+                .antMatchers("/doc.html").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/v2/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v2/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/consumer/admin/login").permitAll()
                 .antMatchers("/consumer/admin/authenticate").permitAll()
                 .antMatchers("/consumer/admin/registerUser").permitAll()

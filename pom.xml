@@ -29,6 +29,7 @@
         <module>cloud-airspace</module>
         <module>cloud-task</module>
         <module>cloud-ui</module>
+        <module>untitled</module>
     </modules>
 
 
